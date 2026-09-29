@@ -18,6 +18,7 @@ import '../model/request/patient_schedule_model.dart';
 import '../model/request/request_data_model.dart';
 import '../services/auth_api_services/auth_services.dart';
 import '../services/token_manager/token_manager_service.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class ProfileController extends GetxController{
   final ApiService _api = Get.put(ApiService());
@@ -181,13 +182,22 @@ class ProfileController extends GetxController{
 
   Future<ClinitinaLoginDataModel> getLoginClinitianData() async {
     // List<OfferLetterData> itemsList = [];
-    var itemsList;
+    var itemsList = ClinitinaLoginDataModel(
+        clinicianFullName: '',
+        imageUrl: '',
+        employeeTypeId: 0,
+        abbreviation: '',
+        color: '',
+        employeeType: '',
+        age: 0,
+        gender: '');
     final companyId = await TokenManager.getCompanyId();
     final email = await TokenManager.getEmail();
     try {
       isClinitianloading.value = true;
       error.value = '';
-      final response =  await _api.get(ProfileRepository.getClinitianData());
+      // final response =  await _api.get(ProfileRepository.getClinitianData());  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('profile.clinicianData'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         itemsList = ClinitinaLoginDataModel(
             clinicianFullName: response.data['clinicianFullName'] ?? '',
@@ -214,13 +224,14 @@ class ProfileController extends GetxController{
 
   Future<EmployeeIdByEmail> getEmployeeIdMaster() async {
     // List<OfferLetterData> itemsList = [];
-    var itemsList;
+    var itemsList = EmployeeIdByEmail(employeeId: 0);
     final companyId = await TokenManager.getCompanyId();
     final email = await TokenManager.getEmail();
     try {
       isLoading.value = true;
       error.value = '';
-      final response =  await _api.get(ProfileRepository.getEmpIdByEmail(companyId: companyId, email: email));
+      // final response =  await _api.get(ProfileRepository.getEmpIdByEmail(companyId: companyId, email: email));  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('profile.employeeIdByEmail'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         itemsList = EmployeeIdByEmail(employeeId: int.parse(response.data));
       } else {
@@ -261,18 +272,19 @@ class ProfileController extends GetxController{
       final userId = await TokenManager.getUserId();
       final companyId = await TokenManager.getCompanyId();
 
-      final res = await _api.patch(
-        ProfileRepository.patchEmployeeData(empId: empId),
-        {
-          "employeeId": empId,
-          "userId": userId,
-          "firstName": employeeFirstName,
-          "lastName": employeeLastName,
-          "primaryPhoneNbr": employeePhone,
-          "personalEmail": employeeEmail,
-          "companyId": companyId,
-        },
-      );
+      // final res = await _api.patch(
+      //   ProfileRepository.patchEmployeeData(empId: empId),
+      //   {
+      //     "employeeId": empId,
+      //     "userId": userId,
+      //     "firstName": employeeFirstName,
+      //     "lastName": employeeLastName,
+      //     "primaryPhoneNbr": employeePhone,
+      //     "personalEmail": employeeEmail,
+      //     "companyId": companyId,
+      //   },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.patchEmployee'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final backendMessage = extractBackendMessage(res.data, res.statusMessage);
@@ -317,9 +329,10 @@ class ProfileController extends GetxController{
     try {
       isEmployeeSaveLoading.value = true;
       error.value = '';
-      final res = await _api.post(ProfileRepository.attachEmployeeImageData(empId: empId), {
-        "base64" : imageBase64.value,
-      });
+      // final res = await _api.post(ProfileRepository.attachEmployeeImageData(empId: empId), {
+      //   "base64" : imageBase64.value,
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.attachImage'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -352,12 +365,20 @@ class ProfileController extends GetxController{
   Future<EmployeePrefill> getEmployeePrefillMaster(
       {required int empId}
       ) async {
-    var itemData;
+    var itemData = EmployeePrefill(
+        employeeId: 0,
+        employeeFirstName: '',
+        employeeLastName: '',
+        employeeEmail: '',
+        employeePhone: '',
+        employeeAddress: '',
+        employeeImage: '');
     try {
       isEmployeeLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.patchEmployeeData(empId: empId));
+      // final res = await _api.get(ProfileRepository.patchEmployeeData(empId: empId));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.employeePrefill'));
       if (res.statusCode == 200 || res.statusCode == 201) {
           itemData = EmployeePrefill(
               employeeId: res.data['employeeId'] ?? 0,
@@ -397,7 +418,8 @@ class ProfileController extends GetxController{
       {required int empId,
       required String date}
       ) async {
-    var itemData;
+    var itemData = PatientVisitsNoteModel(
+        employeeId: empId, date: date, items: const []);
     String formatTimeToAMPM(String? dateTimeString) {
       if (dateTimeString == null || dateTimeString.isEmpty) return '';
       try {
@@ -435,7 +457,8 @@ class ProfileController extends GetxController{
     try {
       isEmployeeLoading.value = true;
       error.value = '';
-      final res = await _api.get(ProfileRepository.getPatientVisitsNote(empId: empId, date: date));
+      // final res = await _api.get(ProfileRepository.getPatientVisitsNote(empId: empId, date: date));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.patientVisitsNote'));
       if (res.statusCode == 200 || res.statusCode == 201) {
         List<PatientVisitItems> patientItems = [];
         if (res.data["items"] != null) {
@@ -495,7 +518,26 @@ class ProfileController extends GetxController{
   Future<VisitDetailModel> getVisitDetailsData(
       {required int visitId}
       ) async {
-    var itemData;
+    var itemData = VisitDetailModel(
+      visitHeader: VisitHeader(
+        visitId: visitId,
+        visitTypeId: 0,
+        visitTypeName: '',
+        timeRange: '',
+      ),
+      patient: Patient(
+        name: '',
+        imageUrl: '',
+        primaryDiagnosis: '',
+        summary: '',
+        address: '',
+      ),
+      planOfCare: const [],
+      visitInstructions: const [],
+      otherClinicians: const [],
+      weeks: const [],
+      isAssistantUser: false,
+    );
     String formatTimeToAMPM(String? dateTimeString) {
       if (dateTimeString == null || dateTimeString.isEmpty) return '';
 
@@ -509,7 +551,8 @@ class ProfileController extends GetxController{
     try {
       isEmployeedetailsLoading.value = true;
       error.value = '';
-      final res = await _api.get(ProfileRepository.getVisitDetails(visitId: visitId));
+      // final res = await _api.get(ProfileRepository.getVisitDetails(visitId: visitId));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.visitDetails'));
 
 
       if (res.statusCode == 200 || res.statusCode == 201) {
@@ -600,16 +643,17 @@ class ProfileController extends GetxController{
     try {
       isVisitUpdateLoding.value = true;
       error.value = '';
-      final res = await _api.post(ProfileRepository.postVisitAceptReject(),
-          isVisitAccepted ? {
-            "visitId": visitId,
-            "isVisitAccepted": isVisitAccepted
-          } : {
-            "visitId": visitId,
-            "rejectedReason": rejectedReason,
-            "isVisitAccepted": isVisitAccepted
-          }
-      );
+      // final res = await _api.post(ProfileRepository.postVisitAceptReject(),
+      //     isVisitAccepted ? {
+      //       "visitId": visitId,
+      //       "isVisitAccepted": isVisitAccepted
+      //     } : {
+      //       "visitId": visitId,
+      //       "rejectedReason": rejectedReason,
+      //       "isVisitAccepted": isVisitAccepted
+      //     }
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.visitAcceptReject'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -656,9 +700,10 @@ class ProfileController extends GetxController{
       isAssistanceLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        ProfileRepository.getAssistanceDropdown(clinicianEmployeeTypeId: clinicianEmployeeTypeId),
-      );
+      // final res = await _api.get(
+      //   ProfileRepository.getAssistanceDropdown(clinicianEmployeeTypeId: clinicianEmployeeTypeId),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.assistanceDropdown'));
 
       if(res.statusCode == 200 || res.statusCode == 201) {
         final data = res.data;
@@ -708,10 +753,11 @@ class ProfileController extends GetxController{
     try {
       isAssistantAssignLoading.value = true;
       error.value = '';
-      final res = await _api.post(ProfileRepository.postAssignAssistant, {
-        "visitId": visitId,
-        "employeeId": EmployeeId
-      });
+      // final res = await _api.post(ProfileRepository.postAssignAssistant, {
+      //   "visitId": visitId,
+      //   "employeeId": EmployeeId
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('profile.assignAssistant'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;

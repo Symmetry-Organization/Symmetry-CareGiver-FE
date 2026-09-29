@@ -83,7 +83,7 @@ class CommonMethods {
         DateTime(tomorrow.year, tomorrow.month, tomorrow.day)) {
       return 'Tomorrow';
     } else {
-      return DateFormat('MMMM dd,yyyy').format(date);
+      return DateFormat('MMMM dd, yyyy').format(date);
     }
   }
 
@@ -97,6 +97,39 @@ class CommonMethods {
         return 'Out of Zone';
       default: ZoneType.unknown;
         return '';
+    }
+  }
+
+  /// Left-edge visit-type tag color on the patient list card
+  /// (Figma: Clinician App / Patient List — Evaluation / SOC / Recert).
+  static Color getVisitTypeColor(String visitType) {
+    switch (visitType.trim().toLowerCase()) {
+      case 'evaluation':
+        return AppColors.visitTagEvaluation;
+      case 'soc':
+        return AppColors.visitTagSOC;
+      case 'recert':
+      case 're-cert':
+      case 'recertification':
+      case 'revisit':
+        return AppColors.visitTagRecert;
+      default:
+        return AppColors.secondaryAppColor;
+    }
+  }
+
+  /// Plan-of-care chip colour. The design fixes OT / PT / ST; anything else
+  /// (RN, and so on) keeps whatever colour the API sent.
+  static Color getPlanOfCareColor(String abbreviation, Color fallback) {
+    switch (abbreviation.trim().toUpperCase()) {
+      case 'OT':
+        return AppColors.planOfCareOt;
+      case 'PT':
+        return AppColors.planOfCarePt;
+      case 'ST':
+        return AppColors.planOfCareSt;
+      default:
+        return fallback;
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../controller/profile_controller.dart';
+import '../../model/profile/patient_visitsnote_model.dart';
 
 class PendingVisits extends StatefulWidget {
   const PendingVisits({super.key});
@@ -258,126 +259,7 @@ class _PendingVisitsState extends State<PendingVisits> {
                             ));
                           });
                         },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 10.h),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6.r),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 1.2.r,
-                                offset: Offset(0, 1.2.w),
-                                color: Colors.black.withValues(alpha: 0.25),
-                              ),
-                            ],
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 97.w,
-                                    height: 20.h,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.appYellowColor.withValues(alpha: 0.3),
-                                    ),
-                                    child: Text(
-                                      visitsItem.visitType.name,
-                                      style: AppTextStyle.normal12style.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.appYellowColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    width: 130.w,
-                                    height: 23.h,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.appYellowColor.withValues(alpha: 0.3),
-                                    ),
-                                    child: Text(
-                                      '${visitsItem.visiteDateTimeFrom}-${visitsItem.visitDateTimeTo}',
-                                      style: AppTextStyle.normal14style.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.defaultTxtGrey,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              customHeight(7.5.h),
-                              Row(
-                                children: [
-                                  customWidth(20.w),
-                                  visitsItem.imageUrl.isEmpty ? CircleAvatar(
-                                    radius: 28,
-                                    backgroundImage:AssetImage(AppAsset.profilePicImg),
-                                  ) :CircleAvatar(
-                                    radius: 28,
-                                    backgroundImage:NetworkImage(visitsItem.imageUrl),
-                                    backgroundColor: Colors.transparent,
-                                  ),
-                                  // Container(
-                                  //   width: 54.w,
-                                  //   decoration: const BoxDecoration(shape: BoxShape.circle),
-                                  //   clipBehavior: Clip.hardEdge,
-                                  //   child: visitsItem.imageUrl.isEmpty ? Image.asset(
-                                  //     AppAsset.profilePicImg,
-                                  //     fit: BoxFit.cover,
-                                  //   ):Image.network(
-                                  //     visitsItem.imageUrl,
-                                  //     fit: BoxFit.cover,
-                                  //   ),
-                                  // ),
-                                  customWidth(10.w),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                visitsItem.patientName,
-                                                style: AppTextStyle.normal12style.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.defaultTxtGrey,
-                                                ),
-                                              ),
-                                              Text(
-                                                visitsItem.primaryDiagnosis.name,
-                                                style: AppTextStyle.normal12style.copyWith(
-                                                  fontWeight: FontWeight.w300,
-                                                  color: AppColors.defaultTxtGrey,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Text(
-                                          '\$${visitsItem.visitCharge}',
-                                          style: AppTextStyle.normal12style.copyWith(
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.primaryAppColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  customWidth(20.w),
-                                ],
-                              ),
-                              customHeight(10.h),
-                            ],
-                          ),
-                        ),
+                        child: _PendingVisitCard(visit: visitsItem),
                       );
                     },
                   ),
@@ -385,6 +267,140 @@ class _PendingVisitsState extends State<PendingVisits> {
               );
             }),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Pending visit row: colour-coded visit-type tag down the left edge, the
+/// patient and appointment time in the middle, and the visit charge on a green
+/// tag down the right edge — same card language as the calendar's patient list.
+class _PendingVisitCard extends StatelessWidget {
+  const _PendingVisitCard({required this.visit});
+
+  final PatientVisitItems visit;
+
+  static const double _cardRadius = 6;
+
+  @override
+  Widget build(BuildContext context) {
+    final Radius radius = Radius.circular(_cardRadius.r);
+    final Color tagColor = CommonMethods.getVisitTypeColor(visit.visitType.name);
+
+    // The shadow sits on the outer box and the rounded clip on the inner one,
+    // so the clip never trims the shadow and the edge tags stay square.
+    return Container(
+      height: 78.h,
+      margin: EdgeInsets.only(bottom: 14.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(radius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardBorderColor,
+            blurRadius: 4.r,
+            offset: Offset(0, 1.h),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(radius),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _edgeTag(
+              color: tagColor,
+              quarterTurns: 3,
+              text: visit.visitType.name,
+              radius: BorderRadius.only(topLeft: radius, bottomLeft: radius),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 23.r,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage: visit.imageUrl.isEmpty
+                          ? AssetImage(AppAsset.profilePicImg) as ImageProvider
+                          : NetworkImage(visit.imageUrl),
+                    ),
+                    customWidth(10.w),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            visit.patientName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.regular12style.copyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
+                              color: AppColors.calenderTxtBlack,
+                            ),
+                          ),
+                          Text(
+                            visit.primaryDiagnosis.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.regular12style.copyWith(
+                              fontWeight: FontWeight.w300,
+                              height: 1.4,
+                              color: AppColors.defaultTxtGrey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    customWidth(8.w),
+                    Text(
+                      '${visit.visiteDateTimeFrom}-${visit.visitDateTimeTo}',
+                      style: AppTextStyle.regular12style.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.calenderTxtBlack,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _edgeTag(
+              color: AppColors.priceTagGreen,
+              quarterTurns: 1,
+              text: '\$${visit.visitCharge.toStringAsFixed(2)}',
+              radius: BorderRadius.only(topRight: radius, bottomRight: radius),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _edgeTag({
+    required Color color,
+    required int quarterTurns,
+    required String text,
+    required BorderRadiusGeometry radius,
+  }) {
+    return Container(
+      width: 25.w,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: color, borderRadius: radius),
+      child: RotatedBox(
+        quarterTurns: quarterTurns,
+        child: Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyle.regular10style.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
       ),
     );

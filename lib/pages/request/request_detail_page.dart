@@ -179,8 +179,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                   child: Text(
                     widget.noteText ?? "",
                     textAlign: TextAlign.center,
-                    style: AppTextStyle.normal10style.copyWith(
+                    style: AppTextStyle.regular10style.copyWith(
                       fontWeight: FontWeight.w600,
+                      height: 1,
+                      letterSpacing: 0,
                       color: Colors.white,
                     ),
                   ),
@@ -307,36 +309,34 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                           child: RichText(
                             text: TextSpan(
                               text: homeController.patientScheduleModel.value.zoneName,
-                              style: AppTextStyle.normal12style.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primaryAppColor,
+                              style: AppTextStyle.regular12style.copyWith(
+                                fontWeight: FontWeight.w600,
+                                height: 1.5,
+                                letterSpacing: 0,
+                                color: AppColors.visitActionBlue,
                               ),
                               children: [
                                 homeController.patientScheduleModel.value.inZone
                                     ? TextSpan(
                                   text: ' (In Zone)',
-                                  style: AppTextStyle.normal12style.copyWith(
+                                  style: AppTextStyle.regular12style.copyWith(
                                     fontWeight: FontWeight.w300,
-                                    color: AppColors.primaryAppColor,
+                                    height: 1.5,
+                                    letterSpacing: 0,
+                                    color: AppColors.visitActionBlue,
                                   ),
                                 )
                                     : TextSpan(
                                   text: ' (Out of Zone)',
-                                  style: AppTextStyle.normal12style.copyWith(
+                                  style: AppTextStyle.regular12style.copyWith(
                                     fontWeight: FontWeight.w300,
+                                    height: 1.5,
+                                    letterSpacing: 0,
                                     color: AppColors.appYellowColor,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          homeController.patientScheduleModel.value.visitTypeName,
-                          style: AppTextStyle.normal12style.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.appYellowColor,
                           ),
                         ),
                       ],
@@ -348,7 +348,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                         customWidth(4.w),
                         Text(
                           homeController.patientScheduleModel.value.address,
-                          style: AppTextStyle.normal12style.copyWith(
+                          style: AppTextStyle.regular12style.copyWith(
+                            fontWeight: FontWeight.w400,
+                            height: 1,
+                            letterSpacing: 0,
                             color: AppColors.defaultTxtGrey,
                           ),
                         ),
@@ -372,8 +375,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                               children: [
                                 Text(
                                   'Week ${weekItem.week}',
-                                  style: AppTextStyle.normal12style.copyWith(
+                                  style: AppTextStyle.regular12style.copyWith(
                                     fontWeight: FontWeight.w600,
+                                    height: 1.5,
+                                    letterSpacing: 0,
                                     color: AppColors.defaultTxtGrey,
                                   ),
                                 ),
@@ -412,7 +417,7 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                                       ? AppColors.rejectionRedColor
                                       : null;
                               return Padding(
-                                padding:  EdgeInsets.symmetric(vertical: 3.h),
+                                padding: EdgeInsets.only(bottom: 8.h),
                                 child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
                                   decoration: isDisabled
@@ -436,8 +441,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                                       children: [
                                         Text(
                                           visit.visitName,
-                                          style: AppTextStyle.normal12style.copyWith(
+                                          style: AppTextStyle.regular12style.copyWith(
                                             fontWeight: FontWeight.w600,
+                                            height: 1,
+                                            letterSpacing: 0,
                                             color: isDisabled ? statusColor : AppColors.defaultTxtGrey,
                                           ),
                                         ),
@@ -450,19 +457,22 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                                               customWidth(8.5.w),
                                               Text(
                                                 visit.visitDate,
-                                                style: AppTextStyle.normal12style.copyWith(
+                                                style: AppTextStyle.regular12style.copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 1.5,
+                                                  letterSpacing: 0,
                                                   color: AppColors.defaultTxtGrey,
                                                 ),
                                               ),
                                               customWidth(2.w),
                                               Container(
-                                                padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
-                                                width: 21.w,
+                                                width: 17.w,
+                                                height: 17.h,
                                                 alignment: Alignment.center,
                                                 margin: EdgeInsets.only(right: 2.w),
                                                 decoration: BoxDecoration(
                                                   color: hexToColor(visit.employeeTypeColor),
-                                                  borderRadius: BorderRadius.circular(2.r),
+                                                  borderRadius: BorderRadius.circular(3.r),
                                                 ),
                                                 child: Text(
                                                   visit.employeeTypeAbbreviation,
@@ -475,14 +485,17 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                                               Spacer(),
                                               Text(
                                                 '${visit.visitTimeFrom}-${visit.visitTimeTo}',
-                                                style: AppTextStyle.normal12style.copyWith(
+                                                textAlign: TextAlign.right,
+                                                style: AppTextStyle.regular12style.copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 23 / 12,
+                                                  letterSpacing: 0,
                                                   color: AppColors.defaultTxtGrey,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        customHeight(8.h),
                                       ],
                                     ),
                                   ),
@@ -503,13 +516,10 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
       floatingActionButton: ChatFABWidget(),
       bottomNavigationBar: widget.filterText == "pending" ? Container(
         height: 100.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.defaultTxtGrey)),
-        ),
+        decoration: const BoxDecoration(color: Colors.white),
         alignment: Alignment.topCenter,
         child: Container(
-          height: 38.h,
+          height: 30.h,
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           margin: EdgeInsets.only(top: 10.h),
     
@@ -521,7 +531,11 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
                   text: 'Reject',
                   buttonColor: AppColors.rejectionRedColor,
                   onPressed: () {
-                    Get.dialog(RejectDialogWidget(visitId: widget.visitId,));
+                    Get.dialog(
+                      RejectDialogWidget(visitId: widget.visitId),
+                      barrierColor: Colors.transparent,
+                      useSafeArea: false,
+                    );
                   },
                   textStyle: AppTextStyle.normal12style.copyWith(
                     color: AppColors.rejectionRedColor,
@@ -530,9 +544,31 @@ class _RequestDetailPageState extends State<RequestDetailPage> with RouteAware {
               ),
               customWidth(5.w),
               Expanded(
+                child: PrimaryOutlinedButton(
+                  radius: 6.r,
+                  text: 'Reschedule',
+                  buttonColor: AppColors.primaryAppColor,
+                  onPressed: () {
+                    Get.dialog(
+                      const RescheduleDialogWidget(),
+                      barrierColor: Colors.transparent,
+                      useSafeArea: false,
+                    );
+                  },
+                  textStyle: AppTextStyle.normal12style.copyWith(
+                    color: AppColors.primaryAppColor,
+                  ),
+                ),
+              ),
+              customWidth(5.w),
+              Expanded(
                 child: PrimaryButton(
                   onTap: () {
-                    Get.dialog(AcceptDialogWidget(visitId: widget.visitId,));
+                    Get.dialog(
+                      AcceptDialogWidget(visitId: widget.visitId),
+                      barrierColor: const Color(0x4DDDDDDD),
+                      useSafeArea: false,
+                    );
                   },
                   padding: EdgeInsets.all(0),
                   label: 'Accept',

@@ -136,6 +136,7 @@ class PrimarySearchOverlayField<T> extends StatefulWidget {
 }
 
 class _PrimarySearchOverlayFieldState<T> extends State<PrimarySearchOverlayField<T>> {
+  static const double _defaultCursorHeight = 22;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
 
@@ -374,7 +375,9 @@ class _PrimarySearchOverlayFieldState<T> extends State<PrimarySearchOverlayField
           autofocus: widget.autofocus,
           textAlign: widget.textAlign,
           cursorColor: widget.style?.color,
-          cursorHeight: widget.style?.height ?? 22,
+            cursorHeight: (widget.style?.fontSize != null && widget.style?.height != null)
+              ? widget.style!.fontSize! * widget.style!.height!
+              : _defaultCursorHeight,
           obscuringCharacter: widget.obscuringCharacter ?? "●",
           style: widget.style ?? AppTextStyle.normal14style,
           decoration: InputDecoration(

@@ -21,6 +21,7 @@ import '../model/chatScreen/groupChat_model.dart';
 import '../model/chatScreen/group_info_model.dart';
 import '../model/request/request_data_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import '../services/mock/mock_data_service.dart';
 
 class ChatDataController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -111,12 +112,13 @@ class ChatDataController extends GetxController {
 
       error.value = '';
 
-      final res = await _api.getWithQueryParam(
-       path: ChatRepository.getChatList(clinicianId: clinicianId),
-        queryParameters: {
-         "search":searchFilter
-        }
-      );
+      // final res = await _api.getWithQueryParam(
+      //  path: ChatRepository.getChatList(clinicianId: clinicianId),
+      //   queryParameters: {
+      //    "search":searchFilter
+      //   }
+      // ); // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('chat.list'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var items in res.data) {
@@ -236,13 +238,14 @@ class ChatDataController extends GetxController {
     required int NbrofRow,
   }) async {
     try {
-      final response = await _api.get(
-        ChatRepository.getChatsScreenList(
-          ptGroupId: ptGroupId,
-          pageNbr: pageNbr,
-          NbrofRow: NbrofRow,
-        ),
-      );
+      // final response = await _api.get(
+      //   ChatRepository.getChatsScreenList(
+      //     ptGroupId: ptGroupId,
+      //     pageNbr: pageNbr,
+      //     NbrofRow: NbrofRow,
+      //   ),
+      // ); // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('chat.patientChats'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -350,13 +353,14 @@ class ChatDataController extends GetxController {
       final int rowNo,
       ) async {
     try {
-      final response = await _api.get(
-        ChatRepository.getAllEmployeeChat(
-          pageNo: pageNo,
-          rows: rowNo,
-          otherEmpid: otherEmpId,
-        ),
-      );
+      // final response = await _api.get(
+      //   ChatRepository.getAllEmployeeChat(
+      //     pageNo: pageNo,
+      //     rows: rowNo,
+      //     otherEmpid: otherEmpId,
+      //   ),
+      // ); // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('chat.employeeGroupCommunication'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -559,18 +563,19 @@ class ChatDataController extends GetxController {
       isChatSendLoading.value = true;
       error.value = '';
 
-      final res = await _api.post(ChatRepository.postSendChat(isGroup: isGroup),
-          isGroup ?
-          {
-            "pt_group_id": ptGroupId,
-            "text_content": textContent,
-            "restrict_patient_from_view": restrictPatientFromView,
-            "sent_as_sms": sentAsSms,
-            // "voice_note_url": null
-          } : {
-            "receiver_emp_id": receiverEmpId,
-            "text_content": empTextContent,
-          });
+      // final res = await _api.post(ChatRepository.postSendChat(isGroup: isGroup),
+      //     isGroup ?
+      //     {
+      //       "pt_group_id": ptGroupId,
+      //       "text_content": textContent,
+      //       "restrict_patient_from_view": restrictPatientFromView,
+      //       "sent_as_sms": sentAsSms,
+      //       // "voice_note_url": null
+      //     } : {
+      //       "receiver_emp_id": receiverEmpId,
+      //       "text_content": empTextContent,
+      //     }); // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('chat.sendMessage'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -612,12 +617,13 @@ class ChatDataController extends GetxController {
       isChatSendLoading.value = true;
       error.value = '';
       final String base64 = await FileUtils.fileToBase64(base64File!);
-      final res = await _api.post(ChatRepository.postAttachMedia(isGroup: isGroup, chatId: chatId),
-          {
-          "base64": base64,
-          "fileName": documentName,
-          }
-                      );
+      // final res = await _api.post(ChatRepository.postAttachMedia(isGroup: isGroup, chatId: chatId),
+      //     {
+      //     "base64": base64,
+      //     "fileName": documentName,
+      //     }
+      //                 ); // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('chat.sendAttachment'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -660,13 +666,14 @@ class ChatDataController extends GetxController {
       isChatSendLoading.value = true;
       error.value = '';
       final String base64 = await FileUtils.fileToBase64(base64File!);
-      final res = await _api.post(ChatRepository.postAttachVoiceNoteMedia(isGroup: isGroup, chatId: chatId),
-          {
-            "base64": base64,
-            "duration": duration,
-            "filename": documentName
-          }
-      );
+      // final res = await _api.post(ChatRepository.postAttachVoiceNoteMedia(isGroup: isGroup, chatId: chatId),
+      //     {
+      //       "base64": base64,
+      //       "duration": duration,
+      //       "filename": documentName
+      //     }
+      // ); // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('chat.sendVoiceNote'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -701,9 +708,10 @@ class ChatDataController extends GetxController {
   Future<PatientsGroupInfoData?> getAllPatientsGroupInfo(
       final int id) async {
     try {
-      final response = await _api.get(
-        ChatRepository.getGroupInfoPatientsChats(id: id),
-      );
+      // final response = await _api.get(
+      //   ChatRepository.getGroupInfoPatientsChats(id: id),
+      // ); // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('chat.groupInfo'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Patients Group Info API Response: ${response.data}");
@@ -784,9 +792,10 @@ class ChatDataController extends GetxController {
   {
     var empDetails;
     try {
-      final response = await _api.get(
-        ChatRepository.getEmployeeDetailsCom(empId: empId),
-      );
+      // final response = await _api.get(
+      //   ChatRepository.getEmployeeDetailsCom(empId: empId),
+      // ); // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('chat.empDetail'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Employee Details API Response: ${response.data}");
@@ -830,9 +839,10 @@ class ChatDataController extends GetxController {
 
       }) async {
     try {
-      var response = await _api.delete(
-        ChatRepository.deleteEmpChat(otherEmpId: otherEmpId),
-      );
+      // var response = await _api.delete(
+      //   ChatRepository.deleteEmpChat(otherEmpId: otherEmpId),
+      // ); // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('chat.deleteEmployeeChat'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Emp Chat clear Successfully");
@@ -865,9 +875,10 @@ class ChatDataController extends GetxController {
         required int id,
       }) async {
     try {
-      var response = await _api.delete(
-        ChatRepository.patchClearPatientGroupChat(id: id),
-      );
+      // var response = await _api.delete(
+      //   ChatRepository.patchClearPatientGroupChat(id: id),
+      // ); // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('chat.clearPatientGroupChat'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Group Chat clear Successfully");
@@ -901,9 +912,10 @@ class ChatDataController extends GetxController {
 
       }) async {
     try {
-      var response = await _api.delete(
-        ChatRepository.patchExitPatientGrp(id: patientId),
-      );
+      // var response = await _api.delete(
+      //   ChatRepository.patchExitPatientGrp(id: patientId),
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('chat.exitPatientGroup'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Group Exit Successfully");
         return ApiData(
@@ -943,9 +955,10 @@ class ChatDataController extends GetxController {
       final fileName = (uri != null && uri.pathSegments.isNotEmpty)
           ? uri.pathSegments.last
           : fileUrl.split('/').last;
-      final response = await _api.getBytes(
-        path: "$apiPath/$fileName",
-      );
+      // final response = await _api.getBytes(
+      //   path: "$apiPath/$fileName",
+      // );  // MOCKED for local UI testing — no real file behind a mock URL
+      final response = mockBytesResponse();
       if (response.statusCode == 200 || response.statusCode == 201) {
         return DownloadFileData(
           fileName: fileName,

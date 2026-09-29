@@ -6,6 +6,7 @@ import '../model/request/request_data_model.dart';
 import '../model/timesheet/timesheet_model.dart';
 import '../services/auth_api_services/auth_services.dart';
 import 'profile_controller.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class TimeSheetController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -281,7 +282,8 @@ class TimeSheetController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(TimeSheetRepository.recordType);
+      // final res = await _api.get(TimeSheetRepository.recordType);  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.recordTypes'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data) {
@@ -312,7 +314,8 @@ class TimeSheetController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(TimeSheetRepository.visitMaster);
+      // final res = await _api.get(TimeSheetRepository.visitMaster);  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.visitMaster'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data) {
@@ -357,8 +360,9 @@ class TimeSheetController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-          TimeSheetRepository.getPatientNameData(search: search));
+      // final res = await _api.get(
+      //     TimeSheetRepository.getPatientNameData(search: search));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.patients'));
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data) {
           itemData.add(
@@ -390,18 +394,19 @@ class TimeSheetController extends GetxController {
       isVisitSaveLoading.value = true;
       error.value = '';
 
-      final res = await _api.post(TimeSheetRepository.visitAdd,
-      data
-      //     {
-      //   "pt_id": ptId,
-      //   "recordTypeId": recordTypeId,
-      //   "visitMasterId": visitMasterId,
-      //   "visitDate": visitDate,
-      //   "startTime": startTime,
-      //   "endTime": endTime,
-      //   "status": status
-      // }
-      );
+      // final res = await _api.post(TimeSheetRepository.visitAdd,
+      // data
+      // //     {
+      // //   "pt_id": ptId,
+      // //   "recordTypeId": recordTypeId,
+      // //   "visitMasterId": visitMasterId,
+      // //   "visitDate": visitDate,
+      // //   "startTime": startTime,
+      // //   "endTime": endTime,
+      // //   "status": status
+      // // }
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.addVisit'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -449,14 +454,15 @@ class TimeSheetController extends GetxController {
       isTimeSheetLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        TimeSheetRepository.getTimeSheetData(
-          recordType: recordType,
-          chooseData: chooseDate,
-          search: search,
-          clinicianId: clinicianId,
-        ),
-      );
+      // final res = await _api.get(
+      //   TimeSheetRepository.getTimeSheetData(
+      //     recordType: recordType,
+      //     chooseData: chooseDate,
+      //     search: search,
+      //     clinicianId: clinicianId,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.list'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var item in res.data) {
@@ -503,19 +509,20 @@ class TimeSheetController extends GetxController {
       isVisitSaveLoading.value = true;
       error.value = '';
 
-      final res = await _api.patch(
-        TimeSheetRepository.editVisit(visitId: timesheetId),
-        data
-        // {
-        //   "recordTypeId": recordTypeId,
-        //   "visitMasterId": visitMasterId,
-        //   "visitDate": visitDate,
-        //   "startTime": startTime,
-        //   "endTime": endTime,
-        //   "status": status,
-        //   "inZone": inZone,
-        // },
-      );
+      // final res = await _api.patch(
+      //   TimeSheetRepository.editVisit(visitId: timesheetId),
+      //   data
+      //   // {
+      //   //   "recordTypeId": recordTypeId,
+      //   //   "visitMasterId": visitMasterId,
+      //   //   "visitDate": visitDate,
+      //   //   "startTime": startTime,
+      //   //   "endTime": endTime,
+      //   //   "status": status,
+      //   //   "inZone": inZone,
+      //   // },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timesheet.editVisit'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         return ApiData(

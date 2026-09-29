@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../core/constant/app_string.dart';
 import '../model/request/request_data_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class NotificationController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -62,9 +63,10 @@ class NotificationController extends GetxController {
       isNotificationList.value = true;
       error.value = '';
       final userId = await TokenManager.getUserId();
-      final res = await _api.get(
-          NotificationRepository.getNotificationList(userId: userId)
-      );
+      // final res = await _api.get(
+      //     NotificationRepository.getNotificationList(userId: userId)
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('notifications.list'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var item in res.data) {
@@ -83,6 +85,7 @@ class NotificationController extends GetxController {
               isRead: item['isRead'] ?? false,
               callId: item['callId'] ?? 0,
               createdAt: item['createdAt'] != null ? timeAgo(item['createdAt']) : '',
+              createdAtIso: item['createdAt'] ?? '',
               updatedAt: item['updatedAt'] ?? ''));
         }
       } else {
@@ -163,9 +166,10 @@ class NotificationController extends GetxController {
     required int notificationId,
   }) async {
     try {
-      var response = await _api.patch(
-          NotificationRepository.patchNotification(notifyId: notificationId), {}
-      );
+      // var response = await _api.patch(
+      //     NotificationRepository.patchNotification(notifyId: notificationId), {}
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('notifications.markRead'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Notification read successfully");
@@ -196,9 +200,10 @@ class NotificationController extends GetxController {
   Future<ApiData> notificationReadAllPatch() async {
     try {
       final userId = await TokenManager.getUserId();
-      var response = await _api.patch(
-          NotificationRepository.patchMarkAllRead(userId: userId), {}
-      );
+      // var response = await _api.patch(
+      //     NotificationRepository.patchMarkAllRead(userId: userId), {}
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('notifications.markAllRead'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Notification All read successfully");
@@ -230,9 +235,10 @@ class NotificationController extends GetxController {
     required int notificationId,
   }) async {
     try {
-      var response = await _api.delete(
-        NotificationRepository.deleteNotification(notifyId: notificationId),
-      );
+      // var response = await _api.delete(
+      //   NotificationRepository.deleteNotification(notifyId: notificationId),
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('notifications.delete'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Notification delete read successfully");

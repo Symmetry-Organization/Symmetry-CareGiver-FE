@@ -6,6 +6,7 @@ import 'package:clinician_app/core/ui/common_divider.dart';
 import 'package:clinician_app/pages/home/widget/chat_fab_widget.dart';
 import 'package:clinician_app/pages/request/widget/accept_dialog_widget.dart';
 import 'package:clinician_app/pages/request/widget/assign_assistant_dialog_widget.dart';
+import 'package:clinician_app/pages/request/visit_week_detail_page.dart';
 import 'package:clinician_app/pages/request/widget/reject_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -77,8 +78,10 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
         );
             }
             
-            final items = controller.visitDetailModel == null;
-            if (items == true) {
+            // Guard the Rxn's value, not the Rxn itself — the wrapper is
+            // never null, so the old check let a null model through to the
+            // `!` uses below.
+            if (controller.visitDetailModel.value == null) {
         return const Expanded(
           child: Center(child: Text("No Details Found!")),
         );
@@ -211,6 +214,7 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
                                   text: 'Assign to Assistant',
                                   textStyle: AppTextStyle.normal12style.copyWith(
                                     fontSize: 11.sp,
+                                    fontWeight: FontWeight.w600,
                                     color: AppColors.primaryAppColor,
                                   ),
                                   padding: EdgeInsets.symmetric(),
@@ -482,7 +486,21 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
                                         ),
                                         customHeight(8.h),
                                         ...List.generate(weekData.items.length, (inx) {
-                                          return Padding(
+                                          return InkWell(
+                                            onTap: () => Get.to(
+                                              () => VisitWeekDetailPage(
+                                                visitNumber: inx + 1,
+                                                weekNumber: weekData.weekNo,
+                                                socLabel: weekData.socLabel,
+                                                patient: controller
+                                                    .visitDetailModel
+                                                    .value!
+                                                    .patient,
+                                                visitId:
+                                                    weekData.items[inx].visitId,
+                                              ),
+                                            ),
+                                            child: Padding(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 4.w,
                                               vertical: 4.h,
@@ -573,6 +591,7 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
                                                 ),
                                               ],
                                             ),
+                                          ),
                                           );
                                         }),
                                       ],
@@ -612,7 +631,11 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
                   text: 'Reject',
                   buttonColor: AppColors.rejectionRedColor,
                   onPressed: () {
-                    Get.dialog(RejectDialogWidget(visitId: widget.visitId,));
+                    Get.dialog(
+                      RejectDialogWidget(visitId: widget.visitId),
+                      barrierColor: Colors.transparent,
+                      useSafeArea: false,
+                    );
                   },
                   textStyle: AppTextStyle.normal12style.copyWith(
                     color: AppColors.rejectionRedColor,
@@ -637,7 +660,11 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
               Expanded(
                 child: PrimaryButton(
                   onTap: () {
-                    Get.dialog(AcceptDialogWidget(visitId: widget.visitId,));
+                    Get.dialog(
+                      AcceptDialogWidget(visitId: widget.visitId),
+                      barrierColor: const Color(0x4DDDDDDD),
+                      useSafeArea: false,
+                    );
                   },
                   padding: EdgeInsets.all(0),
                   label: 'Accept',

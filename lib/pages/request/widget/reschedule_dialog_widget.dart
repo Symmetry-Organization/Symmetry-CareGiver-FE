@@ -61,17 +61,19 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                     'Do you really want to \nreschedule it ?',
                     textAlign: TextAlign.center,
                     style: AppTextStyle.normal10style.copyWith(
+                      fontSize: 12.sp,
                       color: AppColors.defaultTxtGrey,
                     ),
                   ),
                   customHeight(13.h),
                   SizedBox(
-                    height: 20.h,
+                    height: 35.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         PrimaryOutlinedButton(
-                          width: 54.w,
+                          width: 80.w,
+                          height: 35.h,
                           text: 'Cancel',
                           radius: 6.r,
                           borderWidth: 1.r,
@@ -79,20 +81,21 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                             Get.back();
                           },
                           textStyle: AppTextStyle.normal10style.copyWith(
-                            fontSize: 6.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.primaryAppColor,
                           ),
                         ),
                         customWidth(6.w),
                         PrimaryButton(
-                          width: 54.w,
+                          width: 80.w,
+                          height: 35.h,
                           label: 'Save',
                           borderRadius: 6.r,
                           onTap: () {},
                           padding: EdgeInsets.zero,
                           labelStyle: AppTextStyle.normal10style.copyWith(
-                            fontSize: 6.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -106,7 +109,7 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                     child: Text(
                       'Reason*',
                       style: AppTextStyle.normal10style.copyWith(
-                        fontSize: 8.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.defaultTxtGrey,
                       ),
@@ -120,7 +123,7 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                     child: Text(
                       'Scheduled on',
                       style: AppTextStyle.normal10style.copyWith(
-                        fontSize: 8.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.defaultTxtGrey,
                       ),
@@ -129,7 +132,7 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                   customHeight(3.h),
                   PrimaryTextField(
                     controller: dateTextController,
-                    style: AppTextStyle.normal10style.copyWith(
+                    style: AppTextStyle.normal12style.copyWith(
                       color: AppColors.defaultTxtGrey,
                     ),
                     suffixIcon: Padding(
@@ -154,15 +157,15 @@ class _RescheduleDialogWidgetState extends State<RescheduleDialogWidget> {
                   customHeight(12.h),
                   PrimaryButton(
                     label: 'Submit',
-                    height: 18.h,
-                    width: 54.w,
+                    height: 35.h,
+                    width: 80.w,
                     borderRadius: 6.r,
                     onTap: () {
                       Get.back();
                     },
                     padding: EdgeInsets.all(0),
                     labelStyle: AppTextStyle.normal10style.copyWith(
-                      fontSize: 6.sp,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),

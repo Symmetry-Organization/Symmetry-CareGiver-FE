@@ -151,7 +151,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         password: passwordController.text,
                       );
                       if (response.success) {
-                        if (response.roleName == "Clinical" && response.userStatus == "Onboarding") {
+                        if (response.roleName == "Clinical" && response.userStatus == "Completed") {
                           await profileController.fetchRecordType();
                           await profileController.fetchClinitionLoginDetails();
                           await Get.offAll(

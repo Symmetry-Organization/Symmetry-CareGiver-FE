@@ -24,7 +24,7 @@ class ChatNotificationService {
     );
 
     await fln.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: androidInit,
         iOS: iosInit,
       ),
@@ -78,7 +78,7 @@ class ChatNotificationService {
     );
 
     await fln.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: androidInit,
         iOS: iosInit,
       ),
@@ -130,10 +130,10 @@ class ChatNotificationService {
     );
 
     await fln.show(
-      id,
-      title,
-      body,
-      NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       ),

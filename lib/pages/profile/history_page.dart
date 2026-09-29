@@ -65,6 +65,17 @@ class _HistoryPageState extends State<HistoryPage> {
                 padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
                 itemBuilder: (context, index) {
                   final historydata = timeController.timeOffHistory.value.timeOffData[index];
+                  final String status = historydata.status.toLowerCase();
+                  final Color statusTextColor = status == 'approved'
+                      ? AppColors.statusApprovedText
+                      : status == 'rejected'
+                          ? AppColors.statusRejectedText
+                          : AppColors.statusPendingText;
+                  final Color statusBgColor = status == 'approved'
+                      ? AppColors.statusApprovedBg
+                      : status == 'rejected'
+                          ? AppColors.statusRejectedBg
+                          : AppColors.statusPendingBg;
                   return Padding(
                     padding: EdgeInsets.only(top: 12.h),
                     child: Container(
@@ -103,23 +114,20 @@ class _HistoryPageState extends State<HistoryPage> {
 
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: historydata.status == 'approved' ? Colors.green.shade100
-                                      : historydata.status == 'rejected' ?
-                                      Colors.red.shade100 : Colors.yellowAccent.shade100
-                                  // Color(
-                                  //   0xffce9e2f1a,
-                                  // ).withValues(alpha: 0.2),
+                                  color: statusBgColor,
                                 ),
                                 child: Center(
                                   child: Text(
                                     historydata.status.isNotEmpty
                                         ? '${historydata.status[0].toUpperCase()}${historydata.status.substring(1).toLowerCase()}'
                                         : historydata.status,
+                                    textAlign: TextAlign.center,
                                     style: AppTextStyle.normal10style.copyWith(
+                                      fontSize: 10.sp,
                                       fontWeight: FontWeight.w500,
-                                      color:historydata.status == 'approved' ? AppColors.greenColor
-                                          : historydata.status == 'rejected' ? AppColors.redTextColor
-                                          :AppColors.defaultTxtGrey,
+                                      height: 2.3,
+                                      letterSpacing: 0,
+                                      color: statusTextColor,
                                     ),
                                   ),
                                 ),

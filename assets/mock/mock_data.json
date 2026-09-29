@@ -1,0 +1,2505 @@
+{
+  "_readme": {
+    "purpose": "Single source of mock API data for local UI testing. Every API call in the app is commented out and reads from here via MockData.get('<dot.path>').",
+    "shape": "Each leaf is the exact response body the matching endpoint used to return, so controller parsing is unchanged.",
+    "dates": "Visit/message timestamps sit around 2026-09-17. Screens that filter by a picked date ignore it here — the same payload is returned for every date.",
+    "login": "Any email + any password signs in as Jordan Avery (role Clinical, status Completed), which is what HomeScreen requires.",
+    "media": "Avatar and chat-image URLs point at real public hosts (pravatar.cc, picsum.photos), so images render with an internet connection. Document URLs are example.com placeholders: the in-app PDF preview (pages/profile/widgets/pdf_viewer.dart) fetches a URL directly rather than through the API layer, so it will show its error state. Point those DocumentUrl values at a reachable PDF to exercise that screen.",
+    "adding": "Add a key here, then read it at the call site with mockResponse(MockData.get('<section>.<key>')). Keep the body shaped like the real response — the controllers parse it unchanged."
+  },
+  "common": {
+    "ok": {
+      "message": "Success"
+    },
+    "created": {
+      "message": "Created successfully"
+    },
+    "updated": {
+      "message": "Updated successfully"
+    },
+    "deleted": {
+      "message": "Deleted successfully"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "accessToken": "mock.access.token.clinical",
+      "refreshToken": "mock.refresh.token.clinical",
+      "user": {
+        "userId": 9001,
+        "firstName": "Jordan",
+        "lastName": "Avery",
+        "email": "jordan.avery@greenvalley.care",
+        "role": "Clinical",
+        "status": "Completed",
+        "departmentId": 1,
+        "company_id": 12
+      }
+    },
+    "refresh": {
+      "accessToken": "mock.access.token.refreshed",
+      "refreshToken": "mock.refresh.token.refreshed",
+      "user": {
+        "userId": 9001,
+        "firstName": "Jordan",
+        "lastName": "Avery",
+        "email": "jordan.avery@greenvalley.care",
+        "role": "Clinical",
+        "status": "Completed",
+        "departmentId": 1,
+        "company_id": 12
+      }
+    },
+    "verifyOtp": {
+      "accessToken": "mock.access.token.otp",
+      "refreshToken": "mock.refresh.token.otp",
+      "user": {
+        "userId": 9001,
+        "firstName": "Jordan",
+        "lastName": "Avery",
+        "email": "jordan.avery@greenvalley.care",
+        "role": "Clinical",
+        "status": "Completed",
+        "departmentId": 1,
+        "company_id": 12
+      }
+    },
+    "forgotPassword": {
+      "message": "OTP sent to your email"
+    },
+    "resetPassword": {
+      "message": "Password updated successfully"
+    },
+    "logout": {
+      "message": "Logged out"
+    },
+    "companies": {
+      "companies": [
+        {
+          "company_id": 12,
+          "name": "Green Valley Home Health",
+          "company_alias": "greenvalley"
+        }
+      ]
+    }
+  },
+  "profile": {
+    "employeeIdByEmail": "4201",
+    "clinicianData": {
+      "clinicianFullName": "Jordan Avery",
+      "imageUrl": "https://i.pravatar.cc/240?img=12",
+      "employeeTypeId": 3,
+      "abbreviation": "RN",
+      "color": "#2F80ED",
+      "employeeType": "Registered Nurse",
+      "gender": "Female",
+      "age": 34
+    },
+    "employeePrefill": {
+      "employeeId": 4201,
+      "firstName": "Jordan",
+      "lastName": "Avery",
+      "personalEmail": "jordan.avery@greenvalley.care",
+      "primaryPhoneNbr": "+1 415 555 0182",
+      "finalAddress": "1420 Hawthorne Ave, San Jose, CA 95126",
+      "imgurl": "https://i.pravatar.cc/240?img=12"
+    },
+    "patientVisitsNote": {
+      "employeeId": 4201,
+      "date": "2026-09-17",
+      "items": [
+        {
+          "visitId": 51001,
+          "employeeId": 4201,
+          "employeeTypeId": 3,
+          "pt_id": 3101,
+          "patientName": "Marcus Webb",
+          "imageUrl": "https://i.pravatar.cc/240?img=33",
+          "primaryDiagnosis": {
+            "id": 811,
+            "name": "Congestive Heart Failure",
+            "code": "I50.9"
+          },
+          "visitType": {
+            "id": 1,
+            "name": "Start Of Care"
+          },
+          "visiteDateTimeFrom": "2026-09-17T09:00:00.000Z",
+          "visitDateTimeTo": "2026-09-17T10:00:00.000Z",
+          "isVisitCompleted": false,
+          "isVisitMissed": false,
+          "isVisitAccepted": false,
+          "isSecondLastEpisodeVisit": false,
+          "visit_charge": 82.5
+        },
+        {
+          "visitId": 51002,
+          "employeeId": 4201,
+          "employeeTypeId": 3,
+          "pt_id": 3102,
+          "patientName": "Lucille Hart",
+          "imageUrl": "https://i.pravatar.cc/240?img=45",
+          "primaryDiagnosis": {
+            "id": 622,
+            "name": "Type 2 Diabetes Mellitus",
+            "code": "E11.9"
+          },
+          "visitType": {
+            "id": 21,
+            "name": "Skilled Nursing Visit Note"
+          },
+          "visiteDateTimeFrom": "2026-09-17T11:30:00.000Z",
+          "visitDateTimeTo": "2026-09-17T12:15:00.000Z",
+          "isVisitCompleted": true,
+          "isVisitMissed": false,
+          "isVisitAccepted": true,
+          "isSecondLastEpisodeVisit": false,
+          "visit_charge": 64.0
+        },
+        {
+          "visitId": 51003,
+          "employeeId": 4201,
+          "employeeTypeId": 3,
+          "pt_id": 3103,
+          "patientName": "Theodore Nash",
+          "imageUrl": "https://i.pravatar.cc/240?img=52",
+          "primaryDiagnosis": {
+            "id": 734,
+            "name": "COPD With Exacerbation",
+            "code": "J44.1"
+          },
+          "visitType": {
+            "id": 6,
+            "name": "Resumption Of Care"
+          },
+          "visiteDateTimeFrom": "2026-09-17T14:00:00.000Z",
+          "visitDateTimeTo": "2026-09-17T15:00:00.000Z",
+          "isVisitCompleted": false,
+          "isVisitMissed": true,
+          "isVisitAccepted": true,
+          "isSecondLastEpisodeVisit": true,
+          "visit_charge": 78.25
+        }
+      ]
+    },
+    "visitDetails": {
+      "isAssistantUser": false,
+      "visitHeader": {
+        "visitId": 51001,
+        "visitTypeId": 1,
+        "visitTypeName": "Start Of Care",
+        "timeRange": "9.00AM - 10.00AM"
+      },
+      "patient": {
+        "name": "Marcus Webb",
+        "imageUrl": "https://i.pravatar.cc/240?img=33",
+        "primaryDiagnosis": "Congestive Heart Failure (I50.9)",
+        "summary": "72-year-old male, discharged from Valley General after a 4-day admission for fluid overload. Lives with spouse. Needs daily weight checks, diuretic teaching and fall-risk review.",
+        "address": "88 Cedar Hollow Rd, San Jose, CA 95112"
+      },
+      "planOfCare": [
+        {
+          "employeeTypeId": 3,
+          "abbreviation": "RN",
+          "color": "#2F80ED"
+        },
+        {
+          "employeeTypeId": 5,
+          "abbreviation": "PT",
+          "color": "#27AE60"
+        },
+        {
+          "employeeTypeId": 7,
+          "abbreviation": "OT",
+          "color": "#F2994A"
+        }
+      ],
+      "visitInstructions": [
+        {
+          "note": "Check weight before medication."
+        },
+        {
+          "note": "Review low-sodium diet with spouse."
+        }
+      ],
+      "otherClinicians": [
+        {
+          "employeeId": 4310,
+          "userId": 9102,
+          "name": "Priya Raman",
+          "employeeTypeAbbreviation": "PT",
+          "employeeTypeColor": "#27AE60",
+          "phone": "+1 415 555 0244",
+          "imageUrl": "https://i.pravatar.cc/240?img=25"
+        },
+        {
+          "employeeId": 4388,
+          "userId": 9117,
+          "name": "Daniel Osei",
+          "employeeTypeAbbreviation": "OT",
+          "employeeTypeColor": "#F2994A",
+          "phone": "+1 415 555 0291",
+          "imageUrl": "https://i.pravatar.cc/240?img=14"
+        }
+      ],
+      "weeks": [
+        {
+          "weekNo": 1,
+          "socLabel": "SOC 15 Sep 2026",
+          "items": [
+            {
+              "visitId": 51001,
+              "date": "2026-09-17",
+              "employeeTypeAbbreviation": "RN",
+              "timeRange": "9.00AM-10.00AM",
+              "isCompleted": false
+            },
+            {
+              "visitId": 51010,
+              "date": "2026-09-18",
+              "employeeTypeAbbreviation": "PT",
+              "timeRange": "1.00PM-2.00PM",
+              "isCompleted": false
+            },
+            {
+              "visitId": 51011,
+              "date": "2026-09-19",
+              "employeeTypeAbbreviation": "RN",
+              "timeRange": "9.30AM-10.15AM",
+              "isCompleted": true
+            }
+          ]
+        },
+        {
+          "weekNo": 2,
+          "socLabel": "Week 2",
+          "items": [
+            {
+              "visitId": 51020,
+              "date": "2026-09-22",
+              "employeeTypeAbbreviation": "OT",
+              "timeRange": "10.00AM-11.00AM",
+              "isCompleted": false
+            },
+            {
+              "visitId": 51021,
+              "date": "2026-09-24",
+              "employeeTypeAbbreviation": "RN",
+              "timeRange": "9.00AM-9.45AM",
+              "isCompleted": false
+            }
+          ]
+        }
+      ]
+    },
+    "assistanceDropdown": [
+      {
+        "employeeTypeId": 4,
+        "employeeType": "Licensed Vocational Nurse",
+        "color": "#9B51E0",
+        "abbreviation": "LVN",
+        "departmentId": 1,
+        "isAssistant": true,
+        "assistantMasterId": 3,
+        "assistants": [
+          {
+            "employeeId": 4455,
+            "userId": 9201,
+            "userName": "Ana Villanueva",
+            "personalEmail": "ana.villanueva@greenvalley.care"
+          },
+          {
+            "employeeId": 4456,
+            "userId": 9202,
+            "userName": "Ben Carver",
+            "personalEmail": "ben.carver@greenvalley.care"
+          }
+        ]
+      },
+      {
+        "employeeTypeId": 6,
+        "employeeType": "Physical Therapy Assistant",
+        "color": "#56CCF2",
+        "abbreviation": "PTA",
+        "departmentId": 1,
+        "isAssistant": true,
+        "assistantMasterId": 5,
+        "assistants": [
+          {
+            "employeeId": 4470,
+            "userId": 9210,
+            "userName": "Grace Lim",
+            "personalEmail": "grace.lim@greenvalley.care"
+          }
+        ]
+      }
+    ],
+    "patchEmployee": {
+      "message": "Profile updated successfully"
+    },
+    "attachImage": {
+      "message": "Profile photo updated"
+    },
+    "visitAcceptReject": {
+      "message": "Visit status updated"
+    },
+    "assignAssistant": {
+      "message": "Assistant assigned to visit"
+    }
+  },
+  "request": {
+    "todayVisits": {
+      "todaysDate": "2026-09-17T00:00:00.000Z",
+      "visits": [
+        {
+          "visitId": 51001,
+          "visitDateTime": "2026-09-17T09:00:00.000Z",
+          "visitStatus": "pending",
+          "pt_id": 3101,
+          "patientName": "Marcus Webb",
+          "patientImage": "https://i.pravatar.cc/240?img=33",
+          "patientGenderId": 1,
+          "genderName": "Male",
+          "patientAge": 72,
+          "primaryDiagnosisId": 811,
+          "primaryDiagnosisName": "Congestive Heart Failure",
+          "inZone": "true",
+          "warning": "",
+          "zoneId": 4,
+          "zoneName": "South San Jose",
+          "patientAddress": "88 Cedar Hollow Rd, San Jose, CA 95112",
+          "visit_note": "Daily weight check and diuretic teaching.",
+          "distance": 4.2,
+          "visit_charge": 82.5,
+          "visitList": [
+            {
+              "visitId": 51001,
+              "visitDateFrom": "2026-09-17T09:00:00.000Z",
+              "visitDateTo": "2026-09-17T10:00:00.000Z",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED"
+            },
+            {
+              "visitId": 51010,
+              "visitDateFrom": "2026-09-18T13:00:00.000Z",
+              "visitDateTo": "2026-09-18T14:00:00.000Z",
+              "employeeTypeId": 5,
+              "employeeTypeAbbreviation": "PT",
+              "employeeTypeColor": "#27AE60"
+            },
+            {
+              "visitId": 51011,
+              "visitDateFrom": "2026-09-18T09:00:00.000Z",
+              "visitDateTo": "2026-09-18T10:00:00.000Z",
+              "employeeTypeId": 5,
+              "employeeTypeAbbreviation": "PT",
+              "employeeTypeColor": "#F6928A"
+            },
+            {
+              "visitId": 51012,
+              "visitDateFrom": "2026-09-19T09:00:00.000Z",
+              "visitDateTo": "2026-09-19T10:00:00.000Z",
+              "employeeTypeId": 4,
+              "employeeTypeAbbreviation": "OT",
+              "employeeTypeColor": "#FEBD4D"
+            },
+            {
+              "visitId": 51013,
+              "visitDateFrom": "2026-09-22T09:00:00.000Z",
+              "visitDateTo": "2026-09-22T10:00:00.000Z",
+              "employeeTypeId": 6,
+              "employeeTypeAbbreviation": "ST",
+              "employeeTypeColor": "#527FB9"
+            },
+            {
+              "visitId": 51014,
+              "visitDateFrom": "2026-09-23T09:00:00.000Z",
+              "visitDateTo": "2026-09-23T10:00:00.000Z",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED"
+            },
+            {
+              "visitId": 51015,
+              "visitDateFrom": "2026-09-24T09:00:00.000Z",
+              "visitDateTo": "2026-09-24T10:00:00.000Z",
+              "employeeTypeId": 5,
+              "employeeTypeAbbreviation": "PT",
+              "employeeTypeColor": "#F6928A"
+            }
+          ]
+        },
+        {
+          "visitId": 51002,
+          "visitDateTime": "2026-09-17T11:30:00.000Z",
+          "visitStatus": "pending",
+          "pt_id": 3102,
+          "patientName": "Lucille Hart",
+          "patientImage": "https://i.pravatar.cc/240?img=45",
+          "patientGenderId": 2,
+          "genderName": "Female",
+          "patientAge": 68,
+          "primaryDiagnosisId": 622,
+          "primaryDiagnosisName": "Type 2 Diabetes Mellitus",
+          "inZone": "true",
+          "warning": "",
+          "zoneId": 4,
+          "zoneName": "South San Jose",
+          "patientAddress": "215 Willow Glen Way, San Jose, CA 95125",
+          "visit_note": "Glucose log review, insulin pen technique.",
+          "distance": 2.7,
+          "visit_charge": 64.0,
+          "visitList": [
+            {
+              "visitId": 51002,
+              "visitDateFrom": "2026-09-17T11:30:00.000Z",
+              "visitDateTo": "2026-09-17T12:15:00.000Z",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED"
+            }
+          ]
+        },
+        {
+          "visitId": 51003,
+          "visitDateTime": "2026-09-17T14:00:00.000Z",
+          "visitStatus": "pending",
+          "pt_id": 3103,
+          "patientName": "Theodore Nash",
+          "patientImage": "https://i.pravatar.cc/240?img=52",
+          "patientGenderId": 1,
+          "genderName": "Male",
+          "patientAge": 79,
+          "primaryDiagnosisId": 734,
+          "primaryDiagnosisName": "COPD With Exacerbation",
+          "inZone": "false",
+          "warning": "Outside assigned zone",
+          "zoneId": 9,
+          "zoneName": "Campbell",
+          "patientAddress": "42 Latimer Cir, Campbell, CA 95008",
+          "visit_note": "Oxygen safety check and inhaler review.",
+          "distance": 11.6,
+          "visit_charge": 78.25,
+          "visitList": [
+            {
+              "visitId": 51003,
+              "visitDateFrom": "2026-09-17T14:00:00.000Z",
+              "visitDateTo": "2026-09-17T15:00:00.000Z",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED"
+            },
+            {
+              "visitId": 51022,
+              "visitDateFrom": "2026-09-19T10:00:00.000Z",
+              "visitDateTo": "2026-09-19T11:00:00.000Z",
+              "employeeTypeId": 7,
+              "employeeTypeAbbreviation": "OT",
+              "employeeTypeColor": "#F2994A"
+            }
+          ]
+        }
+      ]
+    },
+    "visitSchedule": {
+      "imageUrl": "https://i.pravatar.cc/240?img=33",
+      "patientName": "Marcus Webb",
+      "diagnosisName": "Congestive Heart Failure",
+      "zoneName": "South San Jose",
+      "inZone": true,
+      "visitTypeName": "Start Of Care",
+      "address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+      "visitCharge": 82.5,
+      "weeks": [
+        {
+          "week": 1,
+          "patientId": 3101,
+          "chartNo": 77120,
+          "visits": [
+            {
+              "visitId": 51001,
+              "visitName": "Start Of Care",
+              "visitDate": "2026-09-17",
+              "visitTimeFrom": "09:00 AM",
+              "visitTimeTo": "10:00 AM",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED",
+              "remainingVisitsCount": 8,
+              "episodeTriggerType": "SOC",
+              "daysToEpisodeEnd": 52,
+              "lastVisitPerformedBy": "",
+              "pendingAssistantFormIds": [],
+              "lastVisitIds": [],
+              "isAttemptedVisit": false,
+              "isSecondLastEpisodeVisit": false,
+              "employeeId": 4201,
+              "visitType": 1,
+              "isVisitCompleted": false,
+              "isVisitMissed": false,
+              "onWay": false,
+              "recordTypeId": 1,
+              "isRescheduled": false,
+              "rescheduledAt": "",
+              "rescheduleReasonId": 0,
+              "visitPhotoUrl": ""
+            },
+            {
+              "visitId": 51010,
+              "visitName": "Physical Therapy Evaluation",
+              "visitDate": "2026-09-18",
+              "visitTimeFrom": "01:00 PM",
+              "visitTimeTo": "02:00 PM",
+              "employeeTypeId": 5,
+              "employeeTypeAbbreviation": "PT",
+              "employeeTypeColor": "#27AE60",
+              "remainingVisitsCount": 7,
+              "episodeTriggerType": "SOC",
+              "daysToEpisodeEnd": 51,
+              "lastVisitPerformedBy": "",
+              "pendingAssistantFormIds": [],
+              "lastVisitIds": [
+                51001
+              ],
+              "isAttemptedVisit": false,
+              "isSecondLastEpisodeVisit": false,
+              "employeeId": 4310,
+              "visitType": 2,
+              "isVisitCompleted": false,
+              "isVisitMissed": false,
+              "onWay": false,
+              "recordTypeId": 1,
+              "isRescheduled": false,
+              "rescheduledAt": "",
+              "rescheduleReasonId": 0,
+              "visitPhotoUrl": ""
+            }
+          ]
+        },
+        {
+          "week": 2,
+          "patientId": 3101,
+          "chartNo": 77120,
+          "visits": [
+            {
+              "visitId": 51021,
+              "visitName": "Skilled Nursing Visit Note",
+              "visitDate": "2026-09-24",
+              "visitTimeFrom": "09:00 AM",
+              "visitTimeTo": "09:45 AM",
+              "employeeTypeId": 3,
+              "employeeTypeAbbreviation": "RN",
+              "employeeTypeColor": "#2F80ED",
+              "remainingVisitsCount": 6,
+              "episodeTriggerType": "SOC",
+              "daysToEpisodeEnd": 45,
+              "lastVisitPerformedBy": "Ana Villanueva",
+              "pendingAssistantFormIds": [
+                8801
+              ],
+              "lastVisitIds": [
+                51011
+              ],
+              "isAttemptedVisit": false,
+              "isSecondLastEpisodeVisit": false,
+              "employeeId": 4201,
+              "visitType": 21,
+              "isVisitCompleted": false,
+              "isVisitMissed": false,
+              "onWay": false,
+              "recordTypeId": 1,
+              "isRescheduled": true,
+              "rescheduledAt": "2026-09-15T18:20:00.000Z",
+              "rescheduleReasonId": 2,
+              "visitPhotoUrl": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "calendar": {
+    "visitList": {
+      "visits": [
+        {
+          "visitId": 51001,
+          "employeeTypeId": 3,
+          "patientName": "Marcus Webb",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=33",
+          "address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+          "visitTypeName": "Start Of Care",
+          "primaryDiagnosis": "Congestive Heart Failure",
+          "timeFrom": "2026-09-17T09:00:00.000Z",
+          "timeTo": "2026-09-17T10:00:00.000Z",
+          "inZone": true,
+          "distance": 4.2,
+          "isSecondLastEpisodeVisit": false,
+          "visit_charge": 82.5
+        },
+        {
+          "visitId": 51002,
+          "employeeTypeId": 3,
+          "patientName": "Lucille Hart",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=45",
+          "address": "215 Willow Glen Way, San Jose, CA 95125",
+          "visitTypeName": "Skilled Nursing Visit Note",
+          "primaryDiagnosis": "Type 2 Diabetes Mellitus",
+          "timeFrom": "2026-09-17T11:30:00.000Z",
+          "timeTo": "2026-09-17T12:15:00.000Z",
+          "inZone": true,
+          "distance": 2.7,
+          "isSecondLastEpisodeVisit": false,
+          "visit_charge": 64.0
+        },
+        {
+          "visitId": 51003,
+          "employeeTypeId": 3,
+          "patientName": "Theodore Nash",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=52",
+          "address": "42 Latimer Cir, Campbell, CA 95008",
+          "visitTypeName": "Resumption Of Care",
+          "primaryDiagnosis": "COPD With Exacerbation",
+          "timeFrom": "2026-09-17T14:00:00.000Z",
+          "timeTo": "2026-09-17T15:00:00.000Z",
+          "inZone": false,
+          "distance": 11.6,
+          "isSecondLastEpisodeVisit": true,
+          "visit_charge": 78.25
+        }
+      ]
+    },
+    "calendarData": [
+      {
+        "visitId": 51001,
+        "pt_id": 3101,
+        "employeeTypeId": 3,
+        "employeeId": 4201,
+        "visitType": 1,
+        "visiteDateTimeFrom": "2026-09-17T09:00:00.000Z",
+        "visitDateTimeTo": "2026-09-17T10:00:00.000Z",
+        "isVisitCompleted": false,
+        "isVisitMissed": false,
+        "onWay": false,
+        "recordTypeId": 1,
+        "inZone": true,
+        "patient": {
+          "pt_id": 3101,
+          "pt_first_name": "Marcus",
+          "pt_last_name": "Webb",
+          "pt_contact_no": "+1 408 555 0110",
+          "pt_zip_code": "95112",
+          "pt_chart_no": 77120,
+          "pt_summary": "CHF exacerbation, post-discharge follow up.",
+          "pt_refferal_date": "2026-09-12T00:00:00.000Z",
+          "fk_srv_id": 1,
+          "fk_pt_primary_diagnosis": 811,
+          "fk_pt_secondary_diagnosis": [
+            622
+          ],
+          "fk_pt_refferal_source": 5,
+          "fk_pt_pcp": 210,
+          "fk_pt_marketer": 31,
+          "fk_pt_discplines": [
+            3,
+            5
+          ],
+          "pt_coverage_area": 4,
+          "is_intake": true,
+          "intake_time": "2026-09-13T16:00:00.000Z",
+          "is_archieved": false,
+          "archieved_time": "",
+          "created_at": "2026-09-12T10:00:00.000Z",
+          "pt_date_of_birth": "1954-03-08T00:00:00.000Z",
+          "pt_img_url": "https://i.pravatar.cc/240?img=33",
+          "fk_emp_id_archived": 0,
+          "fk_rpti_id": 0,
+          "is_selfPay": false,
+          "document_name": "referral_webb.pdf",
+          "moveToScheduler": true,
+          "moveToSchedulerDatetime": "2026-09-14T09:00:00.000Z",
+          "admitDateTime": "2026-09-15T08:00:00.000Z",
+          "is_non_admit": false,
+          "pt_MRN": 660412,
+          "pt_SOC_date": "2026-09-15T00:00:00.000Z",
+          "pt_SOC_status": true,
+          "potential_discharge_date": "2026-11-13T00:00:00.000Z",
+          "pt_address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+          "pt_medical_note": "Weigh daily before breakfast.",
+          "is_demographic_filled": true,
+          "is_documentation_upload": true,
+          "is_initialContact_filled": true,
+          "is_orders_filled": true,
+          "is_physician_filled": true,
+          "is_primaryInsurance_filled": true,
+          "companyId": 12,
+          "genderId": 1,
+          "potential_duplicate": false,
+          "fk_pt_primary_diagnosis_name": "Congestive Heart Failure"
+        },
+        "employee": {
+          "employeeId": 4201,
+          "code": "EMP-4201",
+          "firstName": "Jordan",
+          "lastName": "Avery",
+          "expertise": "Cardiac care",
+          "gender": "Female",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "regOfficId": "SJ-01",
+          "onboardingStatus": "Completed",
+          "userId": 9001,
+          "SSNNbr": "***-**-4821",
+          "address": "1420 Hawthorne Ave, San Jose, CA 95126",
+          "cityId": 61,
+          "dateOfBirth": "1992-07-19T00:00:00.000Z",
+          "departmentId": 1,
+          "emergencyContact": "+1 415 555 0199",
+          "employeeTypeId": 3,
+          "employment": "Full Time",
+          "personalEmail": "jordan.avery@greenvalley.care",
+          "primaryPhoneNbr": "+1 415 555 0182",
+          "secondryPhoneNbr": "",
+          "service": "Skilled Nursing",
+          "status": "Active",
+          "workEmail": "j.avery@greenvalley.care",
+          "workPhoneNbr": "+1 415 555 0180",
+          "companyId": 12,
+          "createdAt": "2024-02-01T00:00:00.000Z",
+          "resumeurl": "",
+          "covreage": "South San Jose",
+          "approved": true,
+          "terminationFlag": false,
+          "zoneId": 4,
+          "countryId": 1,
+          "checkDate": "",
+          "dateofResignation": "",
+          "dateofTermination": "",
+          "finalAddress": "1420 Hawthorne Ave, San Jose, CA 95126",
+          "finalPayCheck": 0,
+          "grossPay": 0,
+          "materials": "",
+          "methods": "",
+          "netPay": 0,
+          "reason": "",
+          "rehirable": "",
+          "type": "W2",
+          "dateofHire": "2024-02-01T00:00:00.000Z",
+          "position": "Registered Nurse",
+          "driverLicenceNbr": "D1234567",
+          "race": "",
+          "rating": "4.8",
+          "signatureURL": "",
+          "countyId": 7,
+          "active": true,
+          "summary": "Cardiac and post-acute specialist."
+        },
+        "employeeType": {
+          "employeeTypeId": 3,
+          "employeeType": "Registered Nurse",
+          "color": "#2F80ED",
+          "abbreviation": "RN",
+          "DepartmentId": 1,
+          "is_assistant": false,
+          "assistant_master_id": 0
+        }
+      },
+      {
+        "visitId": 51002,
+        "pt_id": 3102,
+        "employeeTypeId": 3,
+        "employeeId": 4201,
+        "visitType": 21,
+        "visiteDateTimeFrom": "2026-09-17T11:30:00.000Z",
+        "visitDateTimeTo": "2026-09-17T12:15:00.000Z",
+        "isVisitCompleted": true,
+        "isVisitMissed": false,
+        "onWay": false,
+        "recordTypeId": 1,
+        "inZone": true,
+        "patient": {
+          "pt_id": 3102,
+          "pt_first_name": "Lucille",
+          "pt_last_name": "Hart",
+          "pt_contact_no": "+1 408 555 0144",
+          "pt_zip_code": "95125",
+          "pt_chart_no": 77121,
+          "pt_summary": "Diabetes management and wound care.",
+          "pt_refferal_date": "2026-08-28T00:00:00.000Z",
+          "fk_srv_id": 1,
+          "fk_pt_primary_diagnosis": 622,
+          "fk_pt_secondary_diagnosis": [],
+          "fk_pt_refferal_source": 3,
+          "fk_pt_pcp": 214,
+          "fk_pt_marketer": 31,
+          "fk_pt_discplines": [
+            3
+          ],
+          "pt_coverage_area": 4,
+          "is_intake": true,
+          "intake_time": "2026-08-29T15:00:00.000Z",
+          "is_archieved": false,
+          "archieved_time": "",
+          "created_at": "2026-08-28T09:00:00.000Z",
+          "pt_date_of_birth": "1958-11-02T00:00:00.000Z",
+          "pt_img_url": "https://i.pravatar.cc/240?img=45",
+          "fk_emp_id_archived": 0,
+          "fk_rpti_id": 0,
+          "is_selfPay": false,
+          "document_name": "referral_hart.pdf",
+          "moveToScheduler": true,
+          "moveToSchedulerDatetime": "2026-08-30T09:00:00.000Z",
+          "admitDateTime": "2026-09-01T08:00:00.000Z",
+          "is_non_admit": false,
+          "pt_MRN": 660418,
+          "pt_SOC_date": "2026-09-01T00:00:00.000Z",
+          "pt_SOC_status": true,
+          "potential_discharge_date": "2026-10-30T00:00:00.000Z",
+          "pt_address": "215 Willow Glen Way, San Jose, CA 95125",
+          "pt_medical_note": "Check glucose log each visit.",
+          "is_demographic_filled": true,
+          "is_documentation_upload": true,
+          "is_initialContact_filled": true,
+          "is_orders_filled": true,
+          "is_physician_filled": true,
+          "is_primaryInsurance_filled": true,
+          "companyId": 12,
+          "genderId": 2,
+          "potential_duplicate": false,
+          "fk_pt_primary_diagnosis_name": "Type 2 Diabetes Mellitus"
+        },
+        "employee": {
+          "employeeId": 4201,
+          "code": "EMP-4201",
+          "firstName": "Jordan",
+          "lastName": "Avery",
+          "expertise": "Cardiac care",
+          "gender": "Female",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "regOfficId": "SJ-01",
+          "onboardingStatus": "Completed",
+          "userId": 9001,
+          "SSNNbr": "***-**-4821",
+          "address": "1420 Hawthorne Ave, San Jose, CA 95126",
+          "cityId": 61,
+          "dateOfBirth": "1992-07-19T00:00:00.000Z",
+          "departmentId": 1,
+          "emergencyContact": "+1 415 555 0199",
+          "employeeTypeId": 3,
+          "employment": "Full Time",
+          "personalEmail": "jordan.avery@greenvalley.care",
+          "primaryPhoneNbr": "+1 415 555 0182",
+          "secondryPhoneNbr": "",
+          "service": "Skilled Nursing",
+          "status": "Active",
+          "workEmail": "j.avery@greenvalley.care",
+          "workPhoneNbr": "+1 415 555 0180",
+          "companyId": 12,
+          "createdAt": "2024-02-01T00:00:00.000Z",
+          "resumeurl": "",
+          "covreage": "South San Jose",
+          "approved": true,
+          "terminationFlag": false,
+          "zoneId": 4,
+          "countryId": 1,
+          "checkDate": "",
+          "dateofResignation": "",
+          "dateofTermination": "",
+          "finalAddress": "1420 Hawthorne Ave, San Jose, CA 95126",
+          "finalPayCheck": 0,
+          "grossPay": 0,
+          "materials": "",
+          "methods": "",
+          "netPay": 0,
+          "reason": "",
+          "rehirable": "",
+          "type": "W2",
+          "dateofHire": "2024-02-01T00:00:00.000Z",
+          "position": "Registered Nurse",
+          "driverLicenceNbr": "D1234567",
+          "race": "",
+          "rating": "4.8",
+          "signatureURL": "",
+          "countyId": 7,
+          "active": true,
+          "summary": "Cardiac and post-acute specialist."
+        },
+        "employeeType": {
+          "employeeTypeId": 3,
+          "employeeType": "Registered Nurse",
+          "color": "#2F80ED",
+          "abbreviation": "RN",
+          "DepartmentId": 1,
+          "is_assistant": false,
+          "assistant_master_id": 0
+        }
+      }
+    ]
+  },
+  "liveMap": {
+    "dashboard": {
+      "clinician": {
+        "clinicianId": 4201,
+        "name": "Jordan Avery",
+        "imageUrl": "https://i.pravatar.cc/240?img=12",
+        "employeeTypeAbbreviation": "RN",
+        "employeeTypeColor": "#2F80ED"
+      },
+      "activePatientCount": 3,
+      "potentialEarning": 224,
+      "activePatients": [
+        {
+          "pt_id": 3101,
+          "imageUrl": "https://i.pravatar.cc/240?img=33"
+        },
+        {
+          "pt_id": 3102,
+          "imageUrl": "https://i.pravatar.cc/240?img=45"
+        },
+        {
+          "pt_id": 3103,
+          "imageUrl": "https://i.pravatar.cc/240?img=52"
+        }
+      ]
+    },
+    "visitDetails": {
+      "visit": {
+        "visitType": "Start Of Care",
+        "timeRange": "9.00AM - 10.00AM",
+        "visitCount": "1 of 9",
+        "distanceKm": "6.8 km",
+        "distanceMiles": "4.2 miles",
+        "timeToReach": "14 min",
+        "visit_charge": 82.5
+      },
+      "patient": {
+        "name": "Marcus Webb",
+        "imageUrl": "https://i.pravatar.cc/240?img=33",
+        "gender": "Male",
+        "age": 72,
+        "primaryDiagnosis": "Congestive Heart Failure",
+        "about": "Discharged from Valley General after fluid overload. Lives with spouse, uses a walker indoors.",
+        "address": "88 Cedar Hollow Rd, San Jose, CA 95112"
+      },
+      "planOfCare": [
+        {
+          "abbreviation": "RN",
+          "color": "#2F80ED"
+        },
+        {
+          "abbreviation": "PT",
+          "color": "#27AE60"
+        },
+        {
+          "abbreviation": "OT",
+          "color": "#F2994A"
+        }
+      ]
+    },
+    "mapListVisit": {
+      "visits": [
+        {
+          "visitId": 51001,
+          "patientId": 3101,
+          "patientName": "Marcus Webb",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=33",
+          "visiteDateTimeFrom": "2026-09-17T09:00:00.000Z",
+          "visitDateTimeTo": "2026-09-17T10:00:00.000Z",
+          "isVisitCompleted": false,
+          "isVisitMissed": false,
+          "onWay": true,
+          "visit_charge": 82.5
+        },
+        {
+          "visitId": 51002,
+          "patientId": 3102,
+          "patientName": "Lucille Hart",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=45",
+          "visiteDateTimeFrom": "2026-09-17T11:30:00.000Z",
+          "visitDateTimeTo": "2026-09-17T12:15:00.000Z",
+          "isVisitCompleted": true,
+          "isVisitMissed": false,
+          "onWay": false,
+          "visit_charge": 64.0
+        },
+        {
+          "visitId": 51003,
+          "patientId": 3103,
+          "patientName": "Theodore Nash",
+          "patientImgUrl": "https://i.pravatar.cc/240?img=52",
+          "visiteDateTimeFrom": "2026-09-17T14:00:00.000Z",
+          "visitDateTimeTo": "2026-09-17T15:00:00.000Z",
+          "isVisitCompleted": false,
+          "isVisitMissed": true,
+          "onWay": false,
+          "visit_charge": 78.25
+        }
+      ]
+    },
+    "visitData": {
+      "visitsDone": 1,
+      "visitsRemaining": 2,
+      "earned": 64,
+      "visitExpected": 3
+    },
+    "viewRoute": {
+      "sourceLatitude": 37.323,
+      "sourceLongitude": -121.919,
+      "destinyLatitude": 37.3382,
+      "destinyLongitude": -121.8863,
+      "distance": "4.2 miles",
+      "byPatient": {
+        "3101": {
+          "sourceLatitude": 37.323,
+          "sourceLongitude": -121.919,
+          "destinyLatitude": 37.3382,
+          "destinyLongitude": -121.8863,
+          "distance": "4.2 miles"
+        },
+        "3102": {
+          "sourceLatitude": 37.323,
+          "sourceLongitude": -121.919,
+          "destinyLatitude": 37.3096,
+          "destinyLongitude": -121.899,
+          "distance": "2.7 miles"
+        },
+        "3103": {
+          "sourceLatitude": 37.323,
+          "sourceLongitude": -121.919,
+          "destinyLatitude": 37.2872,
+          "destinyLongitude": -121.95,
+          "distance": "11.6 miles"
+        }
+      }
+    }
+  },
+  "chat": {
+    "list": [
+      {
+        "is_group": true,
+        "unseenMessageCount": 2,
+        "lastMessageText": "Weight is down 2 lbs since Monday.",
+        "lastMessageTimestamp": "2026-09-17T08:42:00.000Z",
+        "partner_emp_id": 0,
+        "userId": 0,
+        "firstName": "",
+        "lastName": "",
+        "imgurl": "",
+        "pt_group_id": 7701,
+        "group_name": "Marcus Webb — Care Team",
+        "group_description": "CHF post-discharge coordination",
+        "group_profile_url": "https://i.pravatar.cc/240?img=33",
+        "is_active": true,
+        "groupMembers": [
+          {
+            "memberId": 4201,
+            "firstName": "Jordan",
+            "lastName": "Avery",
+            "imgurl": "https://i.pravatar.cc/240?img=12",
+            "userId": 9001
+          },
+          {
+            "memberId": 4310,
+            "firstName": "Priya",
+            "lastName": "Raman",
+            "imgurl": "https://i.pravatar.cc/240?img=25",
+            "userId": 9102
+          },
+          {
+            "memberId": 4388,
+            "firstName": "Daniel",
+            "lastName": "Osei",
+            "imgurl": "https://i.pravatar.cc/240?img=14",
+            "userId": 9117
+          }
+        ]
+      },
+      {
+        "is_group": false,
+        "unseenMessageCount": 0,
+        "lastMessageText": "Thanks — I'll cover the Thursday visit.",
+        "lastMessageTimestamp": "2026-09-16T17:05:00.000Z",
+        "partner_emp_id": 4310,
+        "userId": 9102,
+        "firstName": "Priya",
+        "lastName": "Raman",
+        "imgurl": "https://i.pravatar.cc/240?img=25",
+        "pt_group_id": 0,
+        "group_name": "",
+        "group_description": "",
+        "group_profile_url": "",
+        "is_active": true,
+        "groupMembers": null
+      },
+      {
+        "is_group": false,
+        "unseenMessageCount": 4,
+        "lastMessageText": "Can you review the supervisory note?",
+        "lastMessageTimestamp": "2026-09-16T12:30:00.000Z",
+        "partner_emp_id": 4455,
+        "userId": 9201,
+        "firstName": "Ana",
+        "lastName": "Villanueva",
+        "imgurl": "https://i.pravatar.cc/240?img=47",
+        "pt_group_id": 0,
+        "group_name": "",
+        "group_description": "",
+        "group_profile_url": "",
+        "is_active": true,
+        "groupMembers": null
+      },
+      {
+        "is_group": true,
+        "unseenMessageCount": 0,
+        "lastMessageText": "Oxygen tank delivery confirmed for Friday.",
+        "lastMessageTimestamp": "2026-09-15T14:10:00.000Z",
+        "partner_emp_id": 0,
+        "userId": 0,
+        "firstName": "",
+        "lastName": "",
+        "imgurl": "",
+        "pt_group_id": 7703,
+        "group_name": "Theodore Nash — Care Team",
+        "group_description": "COPD / oxygen management",
+        "group_profile_url": "https://i.pravatar.cc/240?img=52",
+        "is_active": true,
+        "groupMembers": [
+          {
+            "memberId": 4201,
+            "firstName": "Jordan",
+            "lastName": "Avery",
+            "imgurl": "https://i.pravatar.cc/240?img=12",
+            "userId": 9001
+          },
+          {
+            "memberId": 4388,
+            "firstName": "Daniel",
+            "lastName": "Osei",
+            "imgurl": "https://i.pravatar.cc/240?img=14",
+            "userId": 9117
+          }
+        ]
+      }
+    ],
+    "patientChats": {
+      "groupInfo": {
+        "pt_group_id": 7701,
+        "group_name": "Marcus Webb — Care Team",
+        "group_description": "CHF post-discharge coordination",
+        "group_profile_url": "https://i.pravatar.cc/240?img=33",
+        "is_active": true,
+        "created_at": "2026-09-15T08:00:00.000Z"
+      },
+      "participants": [
+        {
+          "participantId": 3101,
+          "participantType": "patient",
+          "firstName": "Marcus",
+          "lastName": "Webb",
+          "fullName": "Marcus Webb",
+          "imgurl": "https://i.pravatar.cc/240?img=33",
+          "email": "marcus.webb@example.com",
+          "userId": 9501,
+          "isOnline": false,
+          "lastOnline": "2026-09-17T07:15:00.000Z",
+          "willReceiveSms": true,
+          "employeeTypeAbbreviation": null,
+          "employeeTypeColor": null,
+          "employeeTypeId": null,
+          "employeeTypeName": null
+        },
+        {
+          "participantId": 4201,
+          "participantType": "employee",
+          "firstName": "Jordan",
+          "lastName": "Avery",
+          "fullName": "Jordan Avery",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "email": "jordan.avery@greenvalley.care",
+          "userId": 9001,
+          "isOnline": true,
+          "lastOnline": null,
+          "willReceiveSms": false,
+          "employeeTypeAbbreviation": "RN",
+          "employeeTypeColor": "#2F80ED",
+          "employeeTypeId": 3,
+          "employeeTypeName": "Registered Nurse"
+        },
+        {
+          "participantId": 4310,
+          "participantType": "employee",
+          "firstName": "Priya",
+          "lastName": "Raman",
+          "fullName": "Priya Raman",
+          "imgurl": "https://i.pravatar.cc/240?img=25",
+          "email": "priya.raman@greenvalley.care",
+          "userId": 9102,
+          "isOnline": false,
+          "lastOnline": "2026-09-16T19:40:00.000Z",
+          "willReceiveSms": false,
+          "employeeTypeAbbreviation": "PT",
+          "employeeTypeColor": "#27AE60",
+          "employeeTypeId": 5,
+          "employeeTypeName": "Physical Therapist"
+        }
+      ],
+      "messages": [
+        {
+          "pt_user_id": 9501,
+          "pt_user_emp_id": 0,
+          "pt_chat_id": 990101,
+          "text_content": "Good morning — I weighed in at 186 today.",
+          "date_created": "2026-09-17T07:20:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_patient": true,
+          "seen_by_clinicians": [
+            9001
+          ],
+          "attached_multimedia_url": [],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "sender": {
+            "userId": 9501,
+            "senderId": 3101,
+            "senderType": "patient",
+            "firstName": "Marcus",
+            "lastName": "Webb",
+            "imgurl": "https://i.pravatar.cc/240?img=33"
+          }
+        },
+        {
+          "pt_user_id": 0,
+          "pt_user_emp_id": 4201,
+          "pt_chat_id": 990102,
+          "text_content": "That's down 2 lbs since Monday — good progress. Keep the log going.",
+          "date_created": "2026-09-17T08:42:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_patient": true,
+          "seen_by_clinicians": [
+            9001,
+            9102
+          ],
+          "attached_multimedia_url": [],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "sender": {
+            "userId": 9001,
+            "senderId": 4201,
+            "senderType": "employee",
+            "firstName": "Jordan",
+            "lastName": "Avery",
+            "imgurl": "https://i.pravatar.cc/240?img=12"
+          }
+        },
+        {
+          "pt_user_id": 0,
+          "pt_user_emp_id": 4310,
+          "pt_chat_id": 990103,
+          "text_content": "Gait assessment photos from yesterday's PT session.",
+          "date_created": "2026-09-17T09:05:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_patient": false,
+          "seen_by_clinicians": [
+            9102
+          ],
+          "attached_multimedia_url": [
+            "https://picsum.photos/seed/gait1/600/400",
+            "https://picsum.photos/seed/gait2/600/400"
+          ],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "sender": {
+            "userId": 9102,
+            "senderId": 4310,
+            "senderType": "employee",
+            "firstName": "Priya",
+            "lastName": "Raman",
+            "imgurl": "https://i.pravatar.cc/240?img=25"
+          }
+        }
+      ],
+      "pagination": {
+        "currentPage": 1,
+        "totalPages": 1,
+        "totalMessages": 3,
+        "hasNextPage": false,
+        "hasPreviousPage": false
+      }
+    },
+    "employeeGroupCommunication": {
+      "employee_info": {
+        "employeeId": 4310,
+        "user_id": 9102,
+        "fullName": "Priya Raman",
+        "imgurl": "https://i.pravatar.cc/240?img=25",
+        "isOnline": false
+      },
+      "participants": [
+        {
+          "fullName": "Jordan Avery",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "email": "jordan.avery@greenvalley.care",
+          "isOnline": true,
+          "willReceiveSms": false,
+          "departmentId": 1,
+          "departmentName": "Clinical",
+          "role": "Clinical",
+          "employeeId": 4201,
+          "user_id": 9001,
+          "position": "Registered Nurse"
+        },
+        {
+          "fullName": "Priya Raman",
+          "imgurl": "https://i.pravatar.cc/240?img=25",
+          "email": "priya.raman@greenvalley.care",
+          "isOnline": false,
+          "willReceiveSms": false,
+          "departmentId": 1,
+          "departmentName": "Clinical",
+          "role": "Clinical",
+          "employeeId": 4310,
+          "user_id": 9102,
+          "position": "Physical Therapist"
+        }
+      ],
+      "messages": [
+        {
+          "emp_chat_id": 880201,
+          "sender_emp_id": 4310,
+          "receiver_emp_id": 4201,
+          "text_content": "Are you covering Marcus Webb on Thursday?",
+          "date_created": "2026-09-16T16:50:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_employees": [
+            9001
+          ],
+          "attached_multimedia_url": [],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "isMine": false,
+          "sender": {
+            "senderId": 4310,
+            "senderType": "employee",
+            "firstName": "Priya",
+            "lastName": "Raman",
+            "imgurl": "https://i.pravatar.cc/240?img=25"
+          }
+        },
+        {
+          "emp_chat_id": 880202,
+          "sender_emp_id": 4201,
+          "receiver_emp_id": 4310,
+          "text_content": "I can take the morning slot if you handle the PT eval.",
+          "date_created": "2026-09-16T16:58:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_employees": [
+            9102
+          ],
+          "attached_multimedia_url": [],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "isMine": true,
+          "sender": {
+            "senderId": 4201,
+            "senderType": "employee",
+            "firstName": "Jordan",
+            "lastName": "Avery",
+            "imgurl": "https://i.pravatar.cc/240?img=12"
+          }
+        },
+        {
+          "emp_chat_id": 880203,
+          "sender_emp_id": 4310,
+          "receiver_emp_id": 4201,
+          "text_content": "Thanks — I'll cover the Thursday visit.",
+          "date_created": "2026-09-16T17:05:00.000Z",
+          "date_modified": null,
+          "unsend": false,
+          "seen_by_employees": [
+            9001
+          ],
+          "attached_multimedia_url": [],
+          "sticker_multimedia_url": "",
+          "voice_note_url": "",
+          "sent_as_sms": false,
+          "isMine": false,
+          "sender": {
+            "senderId": 4310,
+            "senderType": "employee",
+            "firstName": "Priya",
+            "lastName": "Raman",
+            "imgurl": "https://i.pravatar.cc/240?img=25"
+          }
+        }
+      ],
+      "pagination": {
+        "currentPage": 1,
+        "totalPages": 1,
+        "totalMessages": 3,
+        "hasNextPage": false,
+        "hasPreviousPage": false
+      }
+    },
+    "sendMessage": {
+      "pt_chat_id": 990104,
+      "emp_chat_id": 880204,
+      "message": "Message sent"
+    },
+    "sendAttachment": {
+      "message": "Attachment uploaded"
+    },
+    "sendVoiceNote": {
+      "message": "Voice note uploaded"
+    },
+    "groupInfo": {
+      "pt_group_id": 7701,
+      "group_name": "Marcus Webb — Care Team",
+      "group_description": "CHF post-discharge coordination",
+      "group_profile_url": "https://i.pravatar.cc/240?img=33",
+      "is_active": true,
+      "created_at": "2026-09-15T08:00:00.000Z",
+      "totalMessages": 3,
+      "unseenMessageCount": 2,
+      "patientInfo": {
+        "pt_user_id": 9501,
+        "pt_user_name": "Marcus Webb",
+        "pt_user_email": "marcus.webb@example.com",
+        "pt_user_profile_url": "https://i.pravatar.cc/240?img=33",
+        "pt_user_address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+        "pt_user_treatment": "Congestive Heart Failure",
+        "pt_user_last_online": "2026-09-17T07:15:00.000Z"
+      },
+      "allParticipants": [
+        {
+          "participantId": 3101,
+          "participantType": "patient",
+          "firstName": "Marcus",
+          "lastName": "Webb",
+          "fullName": "Marcus Webb",
+          "imgurl": "https://i.pravatar.cc/240?img=33",
+          "email": "marcus.webb@example.com",
+          "address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+          "treatment": "Congestive Heart Failure",
+          "lastOnline": "2026-09-17T07:15:00.000Z"
+        },
+        {
+          "participantId": 4201,
+          "participantType": "employee",
+          "firstName": "Jordan",
+          "lastName": "Avery",
+          "fullName": "Jordan Avery",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "email": "jordan.avery@greenvalley.care",
+          "address": null,
+          "treatment": null,
+          "lastOnline": null
+        },
+        {
+          "participantId": 4310,
+          "participantType": "employee",
+          "firstName": "Priya",
+          "lastName": "Raman",
+          "fullName": "Priya Raman",
+          "imgurl": "https://i.pravatar.cc/240?img=25",
+          "email": "priya.raman@greenvalley.care",
+          "address": null,
+          "treatment": null,
+          "lastOnline": "2026-09-16T19:40:00.000Z"
+        }
+      ],
+      "mediaLinksAndDocs": [
+        {
+          "mediaId": "m-1001",
+          "mediaType": "image",
+          "mediaUrl": "https://picsum.photos/seed/gait1/600/400",
+          "description": "Gait assessment photo 1",
+          "dateCreated": "2026-09-17T09:05:00.000Z"
+        },
+        {
+          "mediaId": "m-1002",
+          "mediaType": "image",
+          "mediaUrl": "https://picsum.photos/seed/gait2/600/400",
+          "description": "Gait assessment photo 2",
+          "dateCreated": "2026-09-17T09:05:00.000Z"
+        }
+      ]
+    },
+    "empDetail": {
+      "firstName": "Priya",
+      "lastName": "Raman",
+      "employeeId": 4310,
+      "userId": 9102,
+      "profileUrl": "https://i.pravatar.cc/240?img=25",
+      "departmentId": 1,
+      "employeeTypeId": 5,
+      "employeeTypeAbbreviation": "PT",
+      "employeeTypeColor": "#27AE60",
+      "media": [
+        "https://picsum.photos/seed/ptdoc1/600/400",
+        "https://picsum.photos/seed/ptdoc2/600/400"
+      ]
+    },
+    "deleteEmployeeChat": {
+      "message": "Chat cleared"
+    },
+    "clearPatientGroupChat": {
+      "message": "Group chat cleared"
+    },
+    "exitPatientGroup": {
+      "message": "You left the group"
+    }
+  },
+  "notifications": {
+    "list": [
+      {
+        "notificationId": 70101,
+        "userId": 9001,
+        "type": "VISIT_ASSIGNED",
+        "title": "New visit assigned",
+        "body": "Start Of Care for Marcus Webb at 9:00 AM today.",
+        "isRead": false,
+        "callId": 0,
+        "createdAt": "2026-09-17T06:30:00.000Z",
+        "updatedAt": "2026-09-17T06:30:00.000Z"
+      },
+      {
+        "notificationId": 70102,
+        "userId": 9001,
+        "type": "CHAT_MESSAGE",
+        "title": "Ana Villanueva",
+        "body": "Can you review the supervisory note?",
+        "isRead": false,
+        "callId": 0,
+        "createdAt": "2026-09-16T12:30:00.000Z",
+        "updatedAt": "2026-09-16T12:30:00.000Z"
+      },
+      {
+        "notificationId": 70103,
+        "userId": 9001,
+        "type": "CALL_MISSED",
+        "title": "Missed call",
+        "body": "You missed a call from Priya Raman.",
+        "isRead": true,
+        "callId": 44021,
+        "createdAt": "2026-09-16T10:02:00.000Z",
+        "updatedAt": "2026-09-16T10:05:00.000Z"
+      },
+      {
+        "notificationId": 70104,
+        "userId": 9001,
+        "type": "TIME_OFF",
+        "title": "Time off approved",
+        "body": "Your PTO request for 5 Oct 2026 was approved.",
+        "isRead": true,
+        "callId": 0,
+        "createdAt": "2026-09-14T15:45:00.000Z",
+        "updatedAt": "2026-09-14T15:45:00.000Z"
+      }
+    ],
+    "markRead": {
+      "message": "Notification marked as read"
+    },
+    "markAllRead": {
+      "message": "All notifications marked as read"
+    },
+    "delete": {
+      "message": "Notification deleted"
+    }
+  },
+  "timesheet": {
+    "recordTypes": [
+      {
+        "recordTypeId": 1,
+        "recordTypeName": "Patient Visit"
+      },
+      {
+        "recordTypeId": 2,
+        "recordTypeName": "Travel"
+      },
+      {
+        "recordTypeId": 3,
+        "recordTypeName": "Documentation"
+      },
+      {
+        "recordTypeId": 4,
+        "recordTypeName": "Training"
+      }
+    ],
+    "visitMaster": [
+      {
+        "visitId": 1,
+        "typeOfVisit": "Start Of Care",
+        "serviceId": "SRV-001",
+        "eligibleClinician": [
+          {
+            "employeeTypeId": 3,
+            "color": "#2F80ED",
+            "eligibleClinician": "Registered Nurse"
+          },
+          {
+            "employeeTypeId": 5,
+            "color": "#27AE60",
+            "eligibleClinician": "Physical Therapist"
+          }
+        ]
+      },
+      {
+        "visitId": 21,
+        "typeOfVisit": "Skilled Nursing Visit Note",
+        "serviceId": "SRV-021",
+        "eligibleClinician": [
+          {
+            "employeeTypeId": 3,
+            "color": "#2F80ED",
+            "eligibleClinician": "Registered Nurse"
+          }
+        ]
+      },
+      {
+        "visitId": 6,
+        "typeOfVisit": "Resumption Of Care",
+        "serviceId": "SRV-006",
+        "eligibleClinician": [
+          {
+            "employeeTypeId": 3,
+            "color": "#2F80ED",
+            "eligibleClinician": "Registered Nurse"
+          },
+          {
+            "employeeTypeId": 7,
+            "color": "#F2994A",
+            "eligibleClinician": "Occupational Therapist"
+          }
+        ]
+      }
+    ],
+    "patients": [
+      {
+        "pt_id": 3101,
+        "pt_first_name": "Marcus",
+        "pt_last_name": "Webb",
+        "pt_address": "88 Cedar Hollow Rd, San Jose, CA 95112"
+      },
+      {
+        "pt_id": 3102,
+        "pt_first_name": "Lucille",
+        "pt_last_name": "Hart",
+        "pt_address": "215 Willow Glen Way, San Jose, CA 95125"
+      },
+      {
+        "pt_id": 3103,
+        "pt_first_name": "Theodore",
+        "pt_last_name": "Nash",
+        "pt_address": "42 Latimer Cir, Campbell, CA 95008"
+      }
+    ],
+    "list": [
+      {
+        "id": 61001,
+        "source": "Visit",
+        "employeeId": 4201,
+        "employeeTypeId": 3,
+        "pt_id": 3101,
+        "recordTypeId": 1,
+        "recordTypeName": "Patient Visit",
+        "visiteDateTimeFrom": "2026-09-17T09:00:00.000Z",
+        "visitDateTimeTo": "2026-09-17T10:00:00.000Z",
+        "status": "Completed",
+        "location": "88 Cedar Hollow Rd, San Jose, CA",
+        "visitRate": 82.5,
+        "patientName": "Marcus Webb",
+        "patientImgUrl": "https://i.pravatar.cc/240?img=33"
+      },
+      {
+        "id": 61002,
+        "source": "Timesheet",
+        "employeeId": 4201,
+        "employeeTypeId": 3,
+        "pt_id": 3102,
+        "recordTypeId": 1,
+        "recordTypeName": "Patient Visit",
+        "visiteDateTimeFrom": "2026-09-17T11:30:00.000Z",
+        "visitDateTimeTo": "2026-09-17T12:15:00.000Z",
+        "status": "Completed",
+        "location": "215 Willow Glen Way, San Jose, CA",
+        "visitRate": 64.0,
+        "patientName": "Lucille Hart",
+        "patientImgUrl": "https://i.pravatar.cc/240?img=45"
+      },
+      {
+        "id": 61003,
+        "source": "Timesheet",
+        "employeeId": 4201,
+        "employeeTypeId": 3,
+        "pt_id": 0,
+        "recordTypeId": 2,
+        "recordTypeName": "Travel",
+        "visiteDateTimeFrom": "2026-09-17T10:05:00.000Z",
+        "visitDateTimeTo": "2026-09-17T11:20:00.000Z",
+        "status": "Pending",
+        "location": "San Jose → Willow Glen",
+        "visitRate": 18.0,
+        "patientName": "—",
+        "patientImgUrl": ""
+      },
+      {
+        "id": 61004,
+        "source": "Timesheet",
+        "employeeId": 4201,
+        "employeeTypeId": 3,
+        "pt_id": 3103,
+        "recordTypeId": 3,
+        "recordTypeName": "Documentation",
+        "visiteDateTimeFrom": "2026-09-16T17:00:00.000Z",
+        "visitDateTimeTo": "2026-09-16T18:00:00.000Z",
+        "status": "Approved",
+        "location": "Remote",
+        "visitRate": 32.0,
+        "patientName": "Theodore Nash",
+        "patientImgUrl": "https://i.pravatar.cc/240?img=52"
+      }
+    ],
+    "addVisit": {
+      "message": "Timesheet entry created"
+    },
+    "editVisit": {
+      "message": "Timesheet entry updated"
+    }
+  },
+  "timeOff": {
+    "types": [
+      {
+        "id": 1,
+        "name": "Paid Time Off"
+      },
+      {
+        "id": 2,
+        "name": "Sick Leave"
+      },
+      {
+        "id": 3,
+        "name": "Unpaid Leave"
+      },
+      {
+        "id": 4,
+        "name": "Bereavement"
+      }
+    ],
+    "leaveTypes": [
+      {
+        "id": 1,
+        "name": "One day"
+      },
+      {
+        "id": 2,
+        "name": "Multi days"
+      },
+      {
+        "id": 3,
+        "name": "Half day"
+      }
+    ],
+    "history": {
+      "history": [
+        {
+          "timeOffRequestId": 5501,
+          "employeeId": 4201,
+          "employeeName": "Jordan Avery",
+          "timeOffTypeId": 1,
+          "timeOffTypeName": "Paid Time Off",
+          "startDate": "2026-10-05T00:00:00.000Z",
+          "endDate": "2026-10-05T00:00:00.000Z",
+          "reason": "Family event",
+          "status": "Approved",
+          "createdAt": "2026-09-14T15:40:00.000Z"
+        },
+        {
+          "timeOffRequestId": 5502,
+          "employeeId": 4201,
+          "employeeName": "Jordan Avery",
+          "timeOffTypeId": 2,
+          "timeOffTypeName": "Sick Leave",
+          "startDate": "2026-08-21T00:00:00.000Z",
+          "endDate": "2026-08-22T00:00:00.000Z",
+          "reason": "Flu",
+          "status": "Approved",
+          "createdAt": "2026-08-20T08:15:00.000Z"
+        },
+        {
+          "timeOffRequestId": 5503,
+          "employeeId": 4201,
+          "employeeName": "Jordan Avery",
+          "timeOffTypeId": 1,
+          "timeOffTypeName": "Paid Time Off",
+          "startDate": "2026-11-24T00:00:00.000Z",
+          "endDate": "2026-11-28T00:00:00.000Z",
+          "reason": "Thanksgiving travel",
+          "status": "Pending",
+          "createdAt": "2026-09-16T11:00:00.000Z"
+        },
+        {
+          "timeOffRequestId": 5504,
+          "employeeId": 4201,
+          "employeeName": "Jordan Avery",
+          "timeOffTypeId": 3,
+          "timeOffTypeName": "Unpaid Leave",
+          "startDate": "2026-07-02T00:00:00.000Z",
+          "endDate": "2026-07-02T00:00:00.000Z",
+          "reason": "Personal",
+          "status": "Rejected",
+          "createdAt": "2026-06-30T09:30:00.000Z"
+        }
+      ]
+    },
+    "addRequest": {
+      "message": "Time off request submitted"
+    }
+  },
+  "earnings": {
+    "summary": {
+      "total": 18420,
+      "thisWeek": 640,
+      "thisMonth": 2870
+    },
+    "todayVisits": [
+      {
+        "visitId": 51002,
+        "patientId": 3102,
+        "patientName": "Lucille Hart",
+        "patientAvatarUrl": "https://i.pravatar.cc/240?img=45",
+        "startTime": "2026-09-17T11:30:00.000Z",
+        "endTime": "2026-09-17T12:15:00.000Z",
+        "dayLabel": "Today",
+        "visit_charge": 64.0
+      },
+      {
+        "visitId": 51001,
+        "patientId": 3101,
+        "patientName": "Marcus Webb",
+        "patientAvatarUrl": "https://i.pravatar.cc/240?img=33",
+        "startTime": "2026-09-17T09:00:00.000Z",
+        "endTime": "2026-09-17T10:00:00.000Z",
+        "dayLabel": "Today",
+        "visit_charge": 82.5
+      },
+      {
+        "visitId": 50990,
+        "patientId": 3103,
+        "patientName": "Theodore Nash",
+        "patientAvatarUrl": "https://i.pravatar.cc/240?img=52",
+        "startTime": "2026-09-16T14:00:00.000Z",
+        "endTime": "2026-09-16T15:00:00.000Z",
+        "dayLabel": "Yesterday",
+        "visit_charge": 78.25
+      }
+    ],
+    "allEarning": {
+      "clinicianId": 4201,
+      "total": 18420.75,
+      "thismonth": 2870.5,
+      "thisweek": 640.0,
+      "today": 146.5
+    }
+  },
+  "documents": {
+    "list": {
+      "document": [
+        {
+          "docName": "Health Record",
+          "metaId": 1,
+          "docList": [
+            {
+              "employeeDocumentId": 91001,
+              "employeeId": 4201,
+              "DocumentUrl": "https://example.com/mock/tb_test.pdf",
+              "EmployeeDocumentTypeMetaDataId": 1,
+              "EmployeeDocumentTypeSetupId": 11,
+              "UploadDate": "2026-03-04T00:00:00.000Z",
+              "approved": true,
+              "documentName": "TB Test Result",
+              "expiry_date": "2027-03-04T00:00:00.000Z",
+              "docStatus": "Active"
+            },
+            {
+              "employeeDocumentId": 91002,
+              "employeeId": 4201,
+              "DocumentUrl": "https://example.com/mock/physical_exam.pdf",
+              "EmployeeDocumentTypeMetaDataId": 1,
+              "EmployeeDocumentTypeSetupId": 12,
+              "UploadDate": "2026-01-18T00:00:00.000Z",
+              "approved": false,
+              "documentName": "Annual Physical Exam",
+              "expiry_date": "2026-10-18T00:00:00.000Z",
+              "docStatus": "Expiring Soon"
+            }
+          ]
+        },
+        {
+          "docName": "Licenses & Certifications",
+          "metaId": 2,
+          "docList": [
+            {
+              "employeeDocumentId": 91010,
+              "employeeId": 4201,
+              "DocumentUrl": "https://example.com/mock/rn_license.pdf",
+              "EmployeeDocumentTypeMetaDataId": 2,
+              "EmployeeDocumentTypeSetupId": 21,
+              "UploadDate": "2025-06-01T00:00:00.000Z",
+              "approved": true,
+              "documentName": "RN State License",
+              "expiry_date": "2027-05-31T00:00:00.000Z",
+              "docStatus": "Active"
+            },
+            {
+              "employeeDocumentId": 91011,
+              "employeeId": 4201,
+              "DocumentUrl": "https://example.com/mock/bls_card.pdf",
+              "EmployeeDocumentTypeMetaDataId": 2,
+              "EmployeeDocumentTypeSetupId": 22,
+              "UploadDate": "2025-09-09T00:00:00.000Z",
+              "approved": true,
+              "documentName": "BLS / CPR Card",
+              "expiry_date": "2026-09-09T00:00:00.000Z",
+              "docStatus": "Expired"
+            }
+          ]
+        },
+        {
+          "docName": "Acknowledgement",
+          "metaId": 5,
+          "docList": [
+            {
+              "employeeDocumentId": 91020,
+              "employeeId": 4201,
+              "DocumentUrl": "https://example.com/mock/handbook_ack.pdf",
+              "EmployeeDocumentTypeMetaDataId": 5,
+              "EmployeeDocumentTypeSetupId": 51,
+              "UploadDate": "2024-02-05T00:00:00.000Z",
+              "approved": true,
+              "documentName": "Employee Handbook Acknowledgement",
+              "expiry_date": null,
+              "docStatus": "Active"
+            }
+          ]
+        }
+      ]
+    },
+    "subDocTypes": [
+      {
+        "EmployeeDocumentTypeSetupId": 11,
+        "DocumentName": "TB Test Result",
+        "Expiry": "Yes",
+        "ReminderThreshold": "30",
+        "EmployeeDocumentTypeMetaDataId": 1,
+        "idOfDocument": "TB-001",
+        "companyId": 12,
+        "expiry_type": "Annual",
+        "threshold": 30
+      },
+      {
+        "EmployeeDocumentTypeSetupId": 12,
+        "DocumentName": "Annual Physical Exam",
+        "Expiry": "Yes",
+        "ReminderThreshold": "45",
+        "EmployeeDocumentTypeMetaDataId": 1,
+        "idOfDocument": "PE-001",
+        "companyId": 12,
+        "expiry_type": "Annual",
+        "threshold": 45
+      },
+      {
+        "EmployeeDocumentTypeSetupId": 13,
+        "DocumentName": "Hepatitis B Declination",
+        "Expiry": "No",
+        "ReminderThreshold": "0",
+        "EmployeeDocumentTypeMetaDataId": 1,
+        "idOfDocument": "HEPB-001",
+        "companyId": 12,
+        "expiry_type": "None",
+        "threshold": 0
+      }
+    ],
+    "prefill": {
+      "DocumentName": "TB Test Result",
+      "expiry_date": "2027-03-04",
+      "ReminderThreshold": "30",
+      "idOfDocument": "TB-001",
+      "DocumentType": "Health Record",
+      "EmployeeDocumentTypeMetaDataId": 1,
+      "EmployeeDocumentTypeSetupId": 11,
+      "DocumentUrl": "https://example.com/mock/tb_test.pdf",
+      "employeeDocumentId": 91001,
+      "employeeId": 4201
+    },
+    "upload": {
+      "message": "Document uploaded successfully"
+    },
+    "patchMetadata": {
+      "message": "Document updated successfully"
+    },
+    "patchBase64": {
+      "message": "Document replaced successfully"
+    }
+  },
+  "calling": {
+    "registerDevice": {
+      "message": "Device registered"
+    },
+    "unregisterDevice": {
+      "message": "Device unregistered"
+    },
+    "initiate": {
+      "callId": 44090,
+      "callType": "AUDIO",
+      "isVideo": false,
+      "roomName": "mock-room-44090",
+      "token": "mock.livekit.token",
+      "participantUserIds": [
+        9102
+      ],
+      "message": "Call initiated"
+    },
+    "addParticipant": {
+      "message": "Participant added to call"
+    },
+    "join": {
+      "callId": 44090,
+      "channelName": "mock-channel-44090",
+      "token": "mock.agora.token",
+      "appId": "mock-agora-app-id",
+      "status": "ONGOING",
+      "isVideo": false,
+      "groupName": "Marcus Webb — Care Team",
+      "groupImage": "https://i.pravatar.cc/240?img=33",
+      "contactName": "Priya Raman",
+      "contactImage": "https://i.pravatar.cc/240?img=25",
+      "receiverImages": [
+        "https://i.pravatar.cc/240?img=25"
+      ],
+      "receiverNames": [
+        "Priya Raman"
+      ],
+      "receiverUserId": [
+        9102
+      ]
+    },
+    "end": {
+      "message": "Call ended",
+      "status": "LEFT"
+    },
+    "decline": {
+      "message": "Call declined",
+      "status": "DECLINED"
+    }
+  },
+  "forms": {
+    "patientFormQuestions": {
+      "data": {
+        "questions": []
+      },
+      "comment_users": {}
+    },
+    "patientFormById": {
+      "patient_form_id": 8801,
+      "form_id": 1,
+      "formName": "OASIS RN Start Of Care",
+      "patient_id": 3101,
+      "chart_id": 77120,
+      "episode_id": 4410,
+      "status": "In Progress",
+      "face_to_face": true,
+      "created_at": "2026-09-15T08:10:00.000Z",
+      "updated_at": "2026-09-17T09:15:00.000Z",
+      "assigned_to": {
+        "clinician": {
+          "staff_id": 4201,
+          "name": "Jordan Avery",
+          "imgurl": "https://i.pravatar.cc/240?img=12",
+          "color": "#2F80ED",
+          "abbreviation": "RN"
+        },
+        "qa": {
+          "staff_id": 4600,
+          "name": "Helen Mbeki",
+          "color": "#EB5757",
+          "abbreviation": "QA"
+        },
+        "coder": {
+          "staff_id": 4700,
+          "name": "Omar Haddad",
+          "color": "#6FCF97",
+          "abbreviation": "CD"
+        }
+      },
+      "status_history": [
+        {
+          "from_status": "Not Started",
+          "to_status": "In Progress",
+          "note": "Visit started",
+          "changed_by": {
+            "employee_id": 4201,
+            "name": "Jordan Avery"
+          },
+          "changed_at": "2026-09-17T09:02:00.000Z"
+        }
+      ],
+      "subForms": [
+        {
+          "id": 1,
+          "subFormId": 101,
+          "subFormName": "Patient Tracking",
+          "isFilled": true,
+          "comment_count": 0
+        },
+        {
+          "id": 2,
+          "subFormId": 102,
+          "subFormName": "Clinical Record Items",
+          "isFilled": false,
+          "comment_count": 2
+        },
+        {
+          "id": 3,
+          "subFormId": 103,
+          "subFormName": "Living Arrangements",
+          "isFilled": false,
+          "comment_count": 0
+        }
+      ],
+      "patient_referral": {
+        "pt_id": 3101,
+        "pt_first_name": "Marcus",
+        "pt_last_name": "Webb",
+        "pt_date_of_birth": "1954-03-08T00:00:00.000Z",
+        "genderId": 1,
+        "pt_contact_no": "+1 408 555 0110",
+        "pt_address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+        "pt_img_url": "https://i.pravatar.cc/240?img=33",
+        "pt_chart_no": 77120
+      }
+    },
+    "answerSaved": {
+      "message": "Answers saved"
+    },
+    "assistantFormReview": {
+      "message": "Assistant form approved",
+      "supervisoryNote": {
+        "patient_form_id": 8899
+      }
+    },
+    "restart": {
+      "message": "Form restarted"
+    },
+    "patientReferralList": {
+      "patientReferrals": [
+        {
+          "pt_id": 3101,
+          "pt_first_name": "Marcus",
+          "pt_last_name": "Webb",
+          "pt_contact_no": "+1 408 555 0110",
+          "pt_address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+          "pt_img_url": "https://i.pravatar.cc/240?img=33",
+          "gender": {
+            "gender_id": 1,
+            "gender_name": "Male"
+          },
+          "pt_date_of_birth": "1954-03-08T00:00:00.000Z",
+          "pt_chart_no": 77120,
+          "episodes": []
+        },
+        {
+          "pt_id": 3102,
+          "pt_first_name": "Lucille",
+          "pt_last_name": "Hart",
+          "pt_contact_no": "+1 408 555 0144",
+          "pt_address": "215 Willow Glen Way, San Jose, CA 95125",
+          "pt_img_url": "https://i.pravatar.cc/240?img=45",
+          "gender": {
+            "gender_id": 2,
+            "gender_name": "Female"
+          },
+          "pt_date_of_birth": "1958-11-02T00:00:00.000Z",
+          "pt_chart_no": 77121,
+          "episodes": []
+        }
+      ],
+      "meta": {
+        "total": 2
+      }
+    },
+    "patientReferral": {
+      "pt_id": 3101,
+      "pt_first_name": "Marcus",
+      "pt_last_name": "Webb",
+      "pt_contact_no": "+1 408 555 0110",
+      "pt_address": "88 Cedar Hollow Rd, San Jose, CA 95112",
+      "pt_img_url": "https://i.pravatar.cc/240?img=33",
+      "gender": {
+        "gender_id": 1,
+        "gender_name": "Male"
+      },
+      "pt_date_of_birth": "1954-03-08T00:00:00.000Z",
+      "pt_chart_no": 77120,
+      "episodes": []
+    },
+    "savePatientForm": {
+      "message": "Form saved"
+    },
+    "patchPatientForm": {
+      "message": "Form status updated",
+      "nextPatientFormId": 8802,
+      "nextFormName": "Skilled Nursing Visit Note"
+    },
+    "uploadFile": {
+      "url": "https://example.com/mock/signature.png"
+    },
+    "deleteFile": {
+      "message": "File deleted"
+    },
+    "allForms": [
+      {
+        "formId": 1,
+        "form_id": 1,
+        "formName": "OASIS RN Start Of Care",
+        "status": "Not Started",
+        "patient_form_id": 8801,
+        "subForms": [
+          {
+            "formId": 1,
+            "subFormId": 101,
+            "subFormName": "Patient Tracking",
+            "status": true,
+            "comment_count": 0
+          },
+          {
+            "formId": 1,
+            "subFormId": 102,
+            "subFormName": "Clinical Record Items",
+            "status": false,
+            "comment_count": 2
+          }
+        ]
+      },
+      {
+        "formId": 21,
+        "form_id": 21,
+        "formName": "Skilled Nursing Visit Note",
+        "status": "Not Started",
+        "patient_form_id": 8802,
+        "subForms": [
+          {
+            "formId": 21,
+            "subFormId": 201,
+            "subFormName": "Visit Information",
+            "status": false,
+            "comment_count": 0
+          }
+        ]
+      }
+    ],
+    "allSubForms": [
+      {
+        "formId": 1,
+        "subFormId": 101,
+        "subFormName": "Patient Tracking",
+        "status": true,
+        "comment_count": 0
+      },
+      {
+        "formId": 1,
+        "subFormId": 102,
+        "subFormName": "Clinical Record Items",
+        "status": false,
+        "comment_count": 2
+      },
+      {
+        "formId": 21,
+        "subFormId": 201,
+        "subFormName": "Visit Information",
+        "status": false,
+        "comment_count": 0
+      }
+    ],
+    "patientCharts": [
+      {
+        "pt_chart_no": 77120,
+        "pt_id": 3101
+      },
+      {
+        "pt_chart_no": 77121,
+        "pt_id": 3102
+      }
+    ],
+    "initFormData": {
+      "filled": [
+        {
+          "formId": 1,
+          "form_id": 1,
+          "formName": "OASIS RN Start Of Care",
+          "status": "Completed",
+          "patient_form_id": 8801,
+          "subForms": [
+            {
+              "formId": 1,
+              "subFormId": 101,
+              "subFormName": "Patient Tracking",
+              "status": true,
+              "comment_count": 0
+            }
+          ]
+        }
+      ],
+      "unfilled": [
+        {
+          "formId": 21,
+          "form_id": 21,
+          "formName": "Skilled Nursing Visit Note",
+          "status": "Not Started",
+          "patient_form_id": 8802,
+          "subForms": [
+            {
+              "formId": 21,
+              "subFormId": 201,
+              "subFormName": "Visit Information",
+              "status": false,
+              "comment_count": 0
+            }
+          ]
+        }
+      ]
+    },
+    "episodeDropdown": [
+      {
+        "pt_episodeId": 4410,
+        "episode_id": 4410,
+        "chart_id": 77120,
+        "label": "Episode 1 — 15 Sep 2026 to 13 Nov 2026",
+        "episodeFrom": "2026-09-15T00:00:00.000Z",
+        "episodeTo": "2026-11-13T00:00:00.000Z",
+        "pt_id": 3101
+      },
+      {
+        "pt_episodeId": 4390,
+        "episode_id": 4390,
+        "chart_id": 77120,
+        "label": "Episode 0 — 10 Jul 2026 to 07 Sep 2026",
+        "episodeFrom": "2026-07-10T00:00:00.000Z",
+        "episodeTo": "2026-09-07T00:00:00.000Z",
+        "pt_id": 3101
+      }
+    ],
+    "initPatientForm": {
+      "formId": 1,
+      "form_id": 1,
+      "formName": "OASIS RN Start Of Care",
+      "status": "In Progress",
+      "patient_form_id": 8801,
+      "subForms": [
+        {
+          "formId": 1,
+          "subFormId": 101,
+          "subFormName": "Patient Tracking",
+          "status": false,
+          "comment_count": 0
+        }
+      ]
+    },
+    "questionMarkup": {
+      "data": {
+        "code": "M1800",
+        "title": "Grooming",
+        "data": "Current ability to tend safely to personal hygiene needs."
+      }
+    },
+    "employeeTypes": [
+      {
+        "employeeTypeId": 3,
+        "employeeType": "Registered Nurse",
+        "color": "#2F80ED",
+        "abbreviation": "RN",
+        "DepartmentId": 1
+      },
+      {
+        "employeeTypeId": 5,
+        "employeeType": "Physical Therapist",
+        "color": "#27AE60",
+        "abbreviation": "PT",
+        "DepartmentId": 1
+      },
+      {
+        "employeeTypeId": 7,
+        "employeeType": "Occupational Therapist",
+        "color": "#F2994A",
+        "abbreviation": "OT",
+        "DepartmentId": 1
+      },
+      {
+        "employeeTypeId": 9,
+        "employeeType": "Speech Therapist",
+        "color": "#BB6BD9",
+        "abbreviation": "ST",
+        "DepartmentId": 1
+      }
+    ],
+    "assignPhysicianOrder": {
+      "message": "Physician order assigned"
+    },
+    "startVisit": {
+      "message": "Visit started",
+      "pt_id": 3101,
+      "patient_form_id": 8801,
+      "isSecondLastEpisodeVisit": false,
+      "lastVisitPerformedBy": "",
+      "pendingAssistantFormIds": [],
+      "episodeStatus": {
+        "requiresVisitTypeSelection": false
+      }
+    },
+    "uploadVisitPhoto": {
+      "message": "Visit photo uploaded"
+    },
+    "markVisitMissed": {
+      "message": "Visit marked as missed",
+      "patient_form_id": 8810,
+      "requiresEpisodeEndDecision": false,
+      "lastVisitId": 0,
+      "dischargeFormPatientFormId": 0,
+      "patientDischarged": false
+    },
+    "episodeEnd": {
+      "message": "Episode end recorded"
+    },
+    "recertDecision": {
+      "message": "Recert decision saved"
+    },
+    "pendingReviewForms": [
+      {
+        "visitId": 51021,
+        "patientFormId": 8801,
+        "patientId": 3101,
+        "formId": 1,
+        "formName": "Home Health Aide Visit Note",
+        "assistantEmployeeId": 4455,
+        "assistantName": "Ana Villanueva",
+        "assistantImage": "https://i.pravatar.cc/240?img=47",
+        "assistantEmployeeType": "Licensed Vocational Nurse",
+        "assistantEmployeeTypeAbbreviation": "LVN"
+      }
+    ],
+    "uploadFormTemplate": {
+      "template_code": "MOCK-TPL-001",
+      "template_name": "Mock Form Template",
+      "form_template_id": 9001,
+      "message": "Template uploaded"
+    }
+  }
+}

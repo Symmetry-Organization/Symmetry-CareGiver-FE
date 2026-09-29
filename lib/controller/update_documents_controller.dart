@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../core/common/base64_conversation.dart';
 import '../core/constant/app_string.dart';
@@ -12,6 +14,7 @@ import '../model/chatScreen/chatList_model.dart';
 import '../model/profile/update_documents_model.dart';
 import '../model/request/request_data_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class UpdateDocumentsController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -25,6 +28,9 @@ class UpdateDocumentsController extends GetxController {
   final RxString fileName = ''.obs;
   final RxString filePath = ''.obs;
   final RxString fileNameValidation = ''.obs;
+  // Pages captured with the camera, in the order they were scanned. They are
+  // merged into a single PDF on save — the upload endpoint takes one file.
+  final capturedPages = <CapturedPage>[].obs;
   final isExpDateShown = false.obs;
   final docSubList = <EmployeeDubDocumentDropDownModel>[].obs;
 
@@ -104,6 +110,42 @@ class UpdateDocumentsController extends GetxController {
     }
   }
 
+  void addCapturedPage(File image) {
+    final DateTime now = DateTime.now();
+    capturedPages.add(
+      CapturedPage(
+        file: image,
+        label: '${DateFormat('yyyy/MM/ddHH:mm:ss').format(now)}'
+            '${now.millisecondsSinceEpoch % 100000}.img',
+      ),
+    );
+    fileNameValidation.value = '';
+  }
+
+  void removeCapturedPage(CapturedPage page) {
+    capturedPages.remove(page);
+  }
+
+  /// Merges the captured pages into a single multi-page PDF in the temp
+  /// directory, one page per capture.
+  Future<File> buildCapturedPagesPdf() async {
+    final pw.Document pdf = pw.Document();
+    for (final CapturedPage page in capturedPages) {
+      final pw.MemoryImage image = pw.MemoryImage(await page.file.readAsBytes());
+      pdf.addPage(
+        pw.Page(
+          build: (context) => pw.Center(child: pw.Image(image)),
+        ),
+      );
+    }
+    final Directory dir = await getTemporaryDirectory();
+    final File out = File(
+      '${dir.path}/scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
+    await out.writeAsBytes(await pdf.save());
+    return out;
+  }
+
   void clearFile() {
     fileName.value = '';
     filePath.value = '';
@@ -111,6 +153,7 @@ class UpdateDocumentsController extends GetxController {
   void clearAll() {
     fileName.value = '';
     filePath.value = '';
+    capturedPages.clear();
      selectedSubDocId.value = 0;
      selectedSubDocName.value = '';
      selectedMasterMetaDocId.value = 0;
@@ -153,12 +196,13 @@ class UpdateDocumentsController extends GetxController {
       isDocListLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        ProfileRepository.getUpdateListDocument(
-          employeeId: empId,
-          approveOnly: approveOnly, search: searchText,
-        ),
-      );
+      // final res = await _api.get(
+      //   ProfileRepository.getUpdateListDocument(
+      //     employeeId: empId,
+      //     approveOnly: approveOnly, search: searchText,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.list'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         List<DocumentGroup> docData = [];
@@ -236,11 +280,12 @@ class UpdateDocumentsController extends GetxController {
       isSubDocListLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        ProfileRepository.getSubDocListDocument(docMetaId: docMetaId
+      // final res = await _api.get(
+      //   ProfileRepository.getSubDocListDocument(docMetaId: docMetaId
 
-        ),
-      );
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.subDocTypes'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for(var item in res.data){
@@ -278,11 +323,12 @@ class UpdateDocumentsController extends GetxController {
       isDocumentSaveLoading.value = true;
       error.value = '';
 
-      final res = await _api.post(ProfileRepository.postUploadDocument(
-          docMetaId: docMetaId,
-          docTypeSetupId: docTypeSetupId,
-          empId: empId), {
-      });
+      // final res = await _api.post(ProfileRepository.postUploadDocument(
+      //     docMetaId: docMetaId,
+      //     docTypeSetupId: docTypeSetupId,
+      //     empId: empId), {
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.upload'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         print('Doc uploaded successfully');
@@ -328,18 +374,19 @@ class UpdateDocumentsController extends GetxController {
       final String base64 = await FileUtils.fileToBase64(base64File);
       print('Expiry Date: $expiryDate');
 
-      final res = await _api.post(
-        ProfileRepository.postUploadDocumentBase64(
-          docMetaId: docMetaId,
-          docTypeSetupId: docTypeSetupId,
-          empId: empId,
-        ),
-        {
-          "base64": base64,
-          "expiry_date": expiryDate,
-          "documentName": documentName,
-        },
-      );
+      // final res = await _api.post(
+      //   ProfileRepository.postUploadDocumentBase64(
+      //     docMetaId: docMetaId,
+      //     docTypeSetupId: docTypeSetupId,
+      //     empId: empId,
+      //   ),
+      //   {
+      //     "base64": base64,
+      //     "expiry_date": expiryDate,
+      //     "documentName": documentName,
+      //   },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.upload'));
 
       print("Error message ${res.statusMessage}");
       if (res.statusCode == 200 || res.statusCode == 201) {
@@ -387,11 +434,12 @@ class UpdateDocumentsController extends GetxController {
       isPrefillLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        ProfileRepository.getOrPatchEmployeeDocument(
-          employeeDocumentId: employeeDocumentId,
-        ),
-      );
+      // final res = await _api.get(
+      //   ProfileRepository.getOrPatchEmployeeDocument(
+      //     employeeDocumentId: employeeDocumentId,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.prefill'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         data = EmployeeDocumentPrefillData(
@@ -434,19 +482,20 @@ class UpdateDocumentsController extends GetxController {
       isDocumentSaveLoading.value = true;
       error.value = '';
 
-      final res = await _api.patch(
-        ProfileRepository.getOrPatchEmployeeDocument(
-          employeeDocumentId: employeeDocumentId,
-        ),
-        {
-          "EmployeeDocumentTypeMetaDataId": docMetaId,
-          "EmployeeDocumentTypeSetupId": docTypeSetupId,
-          "employeeId": empId,
-          "DocumentUrl": documentUrl,
-          "UploadDate": uploadDate,
-          "expiry_date": expiryDate,
-        },
-      );
+      // final res = await _api.patch(
+      //   ProfileRepository.getOrPatchEmployeeDocument(
+      //     employeeDocumentId: employeeDocumentId,
+      //   ),
+      //   {
+      //     "EmployeeDocumentTypeMetaDataId": docMetaId,
+      //     "EmployeeDocumentTypeSetupId": docTypeSetupId,
+      //     "employeeId": empId,
+      //     "DocumentUrl": documentUrl,
+      //     "UploadDate": uploadDate,
+      //     "expiry_date": expiryDate,
+      //   },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.patchMetadata'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final backendMessage = _extractBackendMessage(res.data, res.statusMessage);
@@ -489,9 +538,10 @@ class UpdateDocumentsController extends GetxController {
       final fileName = (uri != null && uri.pathSegments.isNotEmpty)
           ? uri.pathSegments.last
           : fileUrl.split('/').last;
-      final response = await _api.getBytes(
-        path: "${ProfileRepository.employeeDocumentsDownload}/$fileName",
-      );
+      // final response = await _api.getBytes(
+      //   path: "${ProfileRepository.employeeDocumentsDownload}/$fileName",
+      // );  // MOCKED for local UI testing — no real file behind a mock URL
+      final response = mockBytesResponse();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return DownloadFileData(
@@ -528,18 +578,19 @@ class UpdateDocumentsController extends GetxController {
       error.value = '';
 
       final String base64 = await FileUtils.fileToBase64(base64File);
-      final res = await _api.patch(
-        ProfileRepository.patchEmployeeDocumentWithBase64(
-          employeeDocumentId: employeeDocumentId,
-          docMetaId: docMetaId,
-          docTypeSetupId: docTypeSetupId,
-          empId: empId,
-        ),
-        {
-          "base64": base64,
-          "documentName": documentName,
-        },
-      );
+      // final res = await _api.patch(
+      //   ProfileRepository.patchEmployeeDocumentWithBase64(
+      //     employeeDocumentId: employeeDocumentId,
+      //     docMetaId: docMetaId,
+      //     docTypeSetupId: docTypeSetupId,
+      //     empId: empId,
+      //   ),
+      //   {
+      //     "base64": base64,
+      //     "documentName": documentName,
+      //   },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('documents.patchBase64'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final backendMessage = _extractBackendMessage(res.data, res.statusMessage);
@@ -568,6 +619,15 @@ class UpdateDocumentsController extends GetxController {
       isDocumentSaveLoading.value = false;
     }
   }
+}
+
+/// One page scanned with the camera: the image on disk plus the timestamped
+/// name shown on its thumbnail.
+class CapturedPage {
+  CapturedPage({required this.file, required this.label});
+
+  final File file;
+  final String label;
 }
 
 String _extractBackendMessage(dynamic data, String? fallback) {

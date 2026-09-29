@@ -18,6 +18,9 @@ class MyEarningTodayVisitModel{
   final String endTime;
   final String dayLabel;
   final double visit_charge;
+
+  /// Minutes between start and end — summed for the "Today's Hours" bar.
+  final int durationMinutes;
   MyEarningTodayVisitModel({
     required this.visitId,
     required this.patientId,
@@ -27,6 +30,7 @@ class MyEarningTodayVisitModel{
     required this.endTime,
     required this.dayLabel,
     required this.visit_charge,
+    this.durationMinutes = 0,
   });
 
 }

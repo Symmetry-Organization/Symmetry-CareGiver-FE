@@ -9,6 +9,9 @@ class NotificationModelData{
   final int callId;
   final String createdAt;
   final String updatedAt;
+
+  /// Raw ISO timestamp — [createdAt] is already the "1h ago" label.
+  final String createdAtIso;
   NotificationModelData({
     required this.type,
     required this.notifyId,
@@ -20,5 +23,6 @@ class NotificationModelData{
     required this.callId,
     required this.createdAt,
     required this.updatedAt,
+    this.createdAtIso = '',
   });
 }

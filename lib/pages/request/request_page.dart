@@ -8,10 +8,15 @@ import '../../controller/profile_controller.dart';
 import 'package:clinician_app/core/constant/constant_import.dart';
 import 'package:clinician_app/core/ui/primary_dropdown.dart';
 import 'package:clinician_app/core/ui/primary_textfield.dart';
-import 'package:clinician_app/pages/home/widget/home_appbar_widget.dart';
+import 'package:clinician_app/pages/calender_section/widget/symmetry_top_bar.dart';
+import 'package:clinician_app/pages/profile/notifcation_page.dart';
 import 'package:clinician_app/pages/request/widget/request_info_widget.dart';
+import 'package:intl/intl.dart';
+
+import '../../controller/notification_controller.dart';
 
 import '../../main.dart';
+import '../../model/request/requestList_model.dart';
 
 class RequestPage extends StatefulWidget {
   const RequestPage({super.key});
@@ -23,8 +28,12 @@ class RequestPage extends StatefulWidget {
 class _RequestPageState extends State<RequestPage> with RouteAware {
   final ProfileController profileController = Get.find<ProfileController>();
   final HomeController homeController = Get.find<HomeController>();
+  final NotificationController notificationController =
+      Get.put(NotificationController());
 
   final TextEditingController searchController = TextEditingController();
+
+  static const double _searchRadius = 12;
 
   int get clinicianId => profileController.employeeId.value != 0
       ? profileController.employeeId.value
@@ -70,7 +79,14 @@ class _RequestPageState extends State<RequestPage> with RouteAware {
     return SafeArea(
       child: Column(
         children: [
-          HomeAppbarWidget(),
+          Obx(
+            () => SymmetryTopBar(
+              showNotificationBadge:
+                  notificationController.hasNewNotification.value,
+              onNotificationTap: () => Get.to(() => NotificationPage()),
+            ),
+          ),
+          customHeight(12.h),
 
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -86,8 +102,14 @@ class _RequestPageState extends State<RequestPage> with RouteAware {
                         homeController.debounceSearch(patientName: v);
                       },
                       hintText: 'Search',
-                      filledColor: const Color(0xffE9E9E9),
-                      borderRadius: 6.75.r,
+                      filledColor: AppColors.searchFieldFill,
+                      borderRadius: _searchRadius.r,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(_searchRadius.r),
+                        borderSide: const BorderSide(
+                          color: AppColors.searchFieldBorder,
+                        ),
+                      ),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(AppAsset.searchSvgIcon),
@@ -107,7 +129,7 @@ class _RequestPageState extends State<RequestPage> with RouteAware {
                       iconStyleData: IconStyleData(
                         icon: SvgPicture.asset(AppAsset.downArrowFillSvgIcon),
                       ),
-                      items: ['Pending', 'Accepted', 'Rejected', 'Completed']
+                      items: ['Pending', 'Accepted', 'Rejected', 'Rescheduled', 'Completed']
                           .map(
                             (s) => DropdownMenuItem(
                           value: s,
@@ -168,6 +190,7 @@ class _RequestPageState extends State<RequestPage> with RouteAware {
               if (items.isEmpty) {
                 return const Center(child: Text("No Data Found!"));
               }
+              final rows = _groupByDate(items);
 
               return RefreshIndicator(
                 color: AppColors.primaryAppColor,
@@ -182,19 +205,90 @@ class _RequestPageState extends State<RequestPage> with RouteAware {
                   );
                 },
                 child: ListView.builder(
-                  itemCount: items.length,
+                  itemCount: rows.length,
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   itemBuilder: (context, index) {
+                    final row = rows[index];
+                    if (row.header != null) {
+                      return _DateHeader(label: row.header!);
+                    }
                     return RequestInfoWidget(
                       filterStatus: homeController.statusVal.value.toLowerCase(),
-                        data: items[index]);
+                      data: row.visit!,
+                    );
                   },
                 ),
               );
             }),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Flattened list row: either a date header or a visit card.
+class _RequestRow {
+  const _RequestRow.header(this.header) : visit = null;
+  const _RequestRow.visit(this.visit) : header = null;
+
+  final String? header;
+  final PatientVisitModel? visit;
+}
+
+/// Groups visits under "Today , 25 December 2025" style headers, keeping
+/// the API's order. `visitDateTime` arrives pre-formatted as "dd MMM yyyy".
+List<_RequestRow> _groupByDate(List<PatientVisitModel> visits) {
+  final rows = <_RequestRow>[];
+  String? lastDate;
+  for (final visit in visits) {
+    if (visit.visitDateTime != lastDate) {
+      lastDate = visit.visitDateTime;
+      rows.add(_RequestRow.header(_dateHeaderLabel(visit.visitDateTime)));
+    }
+    rows.add(_RequestRow.visit(visit));
+  }
+  return rows;
+}
+
+String _dateHeaderLabel(String formatted) {
+  DateTime? date;
+  try {
+    // month arrives lower-cased ("17 sep 2026"); intl needs "Sep".
+    final parts = formatted.split(' ');
+    if (parts.length == 3) {
+      parts[1] = parts[1][0].toUpperCase() + parts[1].substring(1);
+    }
+    date = DateFormat('dd MMM yyyy').parse(parts.join(' '));
+  } catch (_) {
+    return formatted;
+  }
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final day = DateTime(date.year, date.month, date.day);
+  final long = DateFormat('d MMMM yyyy').format(day);
+  if (day == today) return 'Today , $long';
+  if (day == today.subtract(const Duration(days: 1))) return 'Yesterday , $long';
+  if (day == today.add(const Duration(days: 1))) return 'Tomorrow , $long';
+  return long;
+}
+
+class _DateHeader extends StatelessWidget {
+  const _DateHeader({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 6.w, top: 6.h, bottom: 4.h),
+      child: Text(
+        label,
+        style: AppTextStyle.normal14style.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.defaultTxtGrey,
+        ),
       ),
     );
   }

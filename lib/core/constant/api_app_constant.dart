@@ -29,8 +29,8 @@
 
 ///demo
 class ApiAppConstant {
-  static  String domain = 'https://demo.symmetry.care/';
-  static  String authDomain = 'https://auth-dev.symmetry.care/';
+  static  String domain = 'https://greenvalley.symmetry.care/';
+  static  String authDomain = 'http://32.199.183.39:3033/';
   static  String get clinicialBaseUrl => '${domain}api/';
   static  String get clinicialAuthBaseUrl => '${authDomain}api/';
   static  String googleApiKey = "AIzaSyCw6mXOPCtbKn5i0bWcAcnfXCkb0y5G7Lg";

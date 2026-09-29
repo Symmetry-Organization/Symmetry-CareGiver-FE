@@ -1,4 +1,5 @@
 import 'package:clinician_app/core/constant/constant_import.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:clinician_app/core/ui/buttons/primary_button.dart';
 import 'package:clinician_app/core/ui/primary_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -54,18 +55,22 @@ class _SeeRouteDialogState extends State<SeeRouteDialog> {
             children: [
               Row(
                 children: [
-                  Text(
-                    'Select the Source and Destination \nto view the route.',
-                    style: AppTextStyle.normal12style.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Text(
+                      'Select the Source and Destination \nto view the route.',
+                      style: AppTextStyle.regular16style.copyWith(
+                        fontWeight: FontWeight.w700,
+                        height: 1.35,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                  const Spacer(),
+                  customWidth(8.w),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: SvgPicture.asset(AppAsset.closeSvgIcon, width: 12.w),
+                    child: SvgPicture.asset(AppAsset.closeSvgIcon, width: 14.w),
                   ),
                 ],
               ),
@@ -76,7 +81,7 @@ class _SeeRouteDialogState extends State<SeeRouteDialog> {
                   if (index == 1) {
                     return Row(
                       children: [
-                        customWidth(68.w),
+                        customWidth(86.w),
                         SizedBox(
                           height: 40.h,
                           width: 2.w,
@@ -102,11 +107,13 @@ class _SeeRouteDialogState extends State<SeeRouteDialog> {
                   return Row(
                     children: [
                       SizedBox(
-                        width: 60.w,
+                        width: 78.w,
                         child: Text(
                           index == 0 ? 'Source' : 'Destination',
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.right,
+                          maxLines: 1,
                           style: AppTextStyle.normal10style.copyWith(
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textGreyColor,
                           ),
@@ -204,20 +211,54 @@ class _SeeRouteDialogState extends State<SeeRouteDialog> {
                               ),
                               hintText: "Select Patient",
                               value: safeValue,
-                              items: uniqueVisits.map((item) {
-                                return DropdownMenuItem<String>(
-                                  value: item.patientName!,
-                                  child: Text(
-                                    item.patientName!,
-                                    // ✅ same text style as textfield
-                                    style: AppTextStyle.normal12style
-                                        .copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.defaultTxtGrey,
+                              dropdownStyleData: DropdownStyleData(
+                                offset: Offset(0, -4.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: AppColors.borderGrey,
+                                  ),
+                                  borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(6.r),
+                                  ),
+                                ),
+                              ),
+                              items: [
+                                for (int i = 0;
+                                    i < uniqueVisits.length;
+                                    i++)
+                                  DropdownMenuItem<String>(
+                                    value: uniqueVisits[i].patientName!,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Text(
+                                            '${i + 1}',
+                                            style: AppTextStyle.normal12style
+                                                .copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.hintGrey,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            uniqueVisits[i].patientName!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            // ✅ same text style as textfield
+                                            style: AppTextStyle.normal12style
+                                                .copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.defaultTxtGrey,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              }).toList(),
+                              ],
                               onChanged: (value) {
                                 if (value == null) return;
                                 liveMapController

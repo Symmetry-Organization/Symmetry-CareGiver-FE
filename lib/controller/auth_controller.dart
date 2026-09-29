@@ -7,6 +7,7 @@ import '../pages/auth/login_screen.dart';
 import '../services/auth_api_services/auth_services.dart';
 import '../services/token_manager/token_manager_service.dart';
 import 'calling_controller.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class AuthController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -37,14 +38,21 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/signIn', {
-        "email": email,
-        "password": password,
-      });
+      // final res = await _api.post('/auth/signIn', {
+      //   "email": email,
+      //   "password": password,
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.signIn'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
-        if (res.data['user']['role'] == "Clinical" &&
-            res.data['user']["status"] == "Onboarding") {
+        // Persist the session for any successful Clinical login, not just
+        // status == "Onboarding" — the app only lets status == "Completed"
+        // users into HomeScreen (see password_screen.dart), so gating the
+        // token save on "Onboarding" alone meant a normal, fully-onboarded
+        // login never got a token: every request after login then went out
+        // with companyId=0/empty email/no token (404 on
+        // GetEmployeeIdByEmail/0/, then 401s, then a forced logout).
+        if (res.data['user']['role'] == "Clinical") {
           print("accessToken ${res.data["accessToken"]}");
           String token = res.data["accessToken"] ?? "";
           String username =
@@ -120,9 +128,10 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/ForgotPassword', {
-        "email": email,
-      });
+      // final res = await _api.post('/auth/ForgotPassword', {
+      //   "email": email,
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.forgotPassword'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -159,10 +168,11 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/verifyOtp', {
-        "email": email,
-        "otp": int.parse(otp),
-      });
+      // final res = await _api.post('/auth/verifyOtp', {
+      //   "email": email,
+      //   "otp": int.parse(otp),
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.verifyOtp'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -226,11 +236,12 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/ResetPassword', {
-        "email": email,
-        "otp": int.parse(otp),
-        "password": newPassword
-      });
+      // final res = await _api.post('/auth/ResetPassword', {
+      //   "email": email,
+      //   "otp": int.parse(otp),
+      //   "password": newPassword
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.resetPassword'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -301,9 +312,10 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/refresh', {
-        "refreshToken":refreshToken
-      });
+      // final res = await _api.post('/auth/refresh', {
+      //   "refreshToken":refreshToken
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.refresh'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -361,9 +373,10 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.post('/auth/logout', {
-        "refreshToken":refreshToken
-      });
+      // final res = await _api.post('/auth/logout', {
+      //   "refreshToken":refreshToken
+      // });  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('auth.logout'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // final data = res.data as Map<String, dynamic>;
@@ -401,9 +414,10 @@ class AuthController extends GetxController {
       isLoading.value = true;
       error.value = '';
       print("$email");
-      final response = await _authApi.post('/auth/check-user-companies', {
-        "email": email,
-      });
+      // final response = await _authApi.post('/auth/check-user-companies', {
+      //   "email": email,
+      // });  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('auth.companies'));
 
       print("<<<>>>${response.statusCode}");
 

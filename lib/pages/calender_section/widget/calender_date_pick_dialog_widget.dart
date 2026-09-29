@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CalenderDatePickDialogWidget extends StatefulWidget {
-  const CalenderDatePickDialogWidget({super.key});
+  const CalenderDatePickDialogWidget({super.key, this.isRange = false});
+
+  /// Range mode waits for a start *and* an end date and pops with a
+  /// `List<DateTime>`. Single mode pops on the first tap with a
+  /// `"yyyy-MM-dd"` string, which is what most callers expect.
+  final bool isRange;
 
   @override
   State<CalenderDatePickDialogWidget> createState() =>
@@ -27,14 +32,22 @@ class _CalenderDatePickDialogWidgetState
           ),
           child: CalendarDatePicker2(
             onValueChanged: (value) {
-              // log('-=-=->${value}');
-              if (value.isNotEmpty && value.first != null) {
-                final DateTime d = value.first!;
-                final formatted =
-                    "${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}";
+              final List<DateTime> picked = value.whereType<DateTime>().toList();
+              if (picked.isEmpty) return;
 
-                Get.back(result: formatted); // ✅ return String
+              if (widget.isRange) {
+                // The first tap only sets the start of the range — stay open
+                // until the end date lands.
+                if (picked.length < 2) return;
+                Get.back(result: picked);
+                return;
               }
+
+              final DateTime d = picked.first;
+              final formatted =
+                  "${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}";
+
+              Get.back(result: formatted); // ✅ return String
             },
             config: CalendarDatePicker2Config(
               firstDayOfWeek: 1,
@@ -49,7 +62,9 @@ class _CalenderDatePickDialogWidgetState
                   ),
                 );
               },
-              calendarType: CalendarDatePicker2Type.range,
+              calendarType: widget.isRange
+                  ? CalendarDatePicker2Type.range
+                  : CalendarDatePicker2Type.single,
               selectedDayTextStyle: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -158,22 +173,26 @@ class _CalenderDatePickDialogWidgetState
                 isToday,
                 textStyle,
               }) {
+                // In range mode the capsule behind the days already marks the
+                // selection — boxing the endpoints too would stamp a square on
+                // each end of it.
+                final bool showSelectedBox =
+                    (isSelected ?? false) && !widget.isRange;
                 return Container(
                   alignment: Alignment.center,
                   width: double.maxFinite,
-                  decoration:
-                      (isSelected ?? false)
-                          ? BoxDecoration(
-                            color: AppColors.primaryAppColor.withValues(
-                              alpha: 0.2,
-                            ),
-                            borderRadius: BorderRadius.circular(6.r),
-                            border: Border.all(
-                              color: AppColors.primaryAppColor,
-                              width: 1.7.w,
-                            ),
-                          )
-                          : null,
+                  decoration: showSelectedBox
+                      ? BoxDecoration(
+                          color: AppColors.primaryAppColor.withValues(
+                            alpha: 0.2,
+                          ),
+                          borderRadius: BorderRadius.circular(6.r),
+                          border: Border.all(
+                            color: AppColors.primaryAppColor,
+                            width: 1.7.w,
+                          ),
+                        )
+                      : null,
                   child: Text(
                     '${date.day}',
                     style: AppTextStyle.normal14style.copyWith(

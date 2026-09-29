@@ -26,28 +26,28 @@ Update this list as features are added or removed.
 
 ## 2. Technology Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Flutter (Dart SDK `^3.7.0`) |
-| Language | Dart |
-| State Management | GetX (`get: ^4.7.2`) — controllers + `Obx`/reactive widgets |
-| Local Persistence | `get_storage` (key-value) — **no Room/SQLite; no relational local database** |
-| Networking | `dio` (REST/JSON), custom auth interceptor for token refresh |
-| Local State (forms) | `provider` (used specifically for the OASIS form builder) |
-| Push Notifications | `firebase_messaging`, `firebase_core`, `flutter_local_notifications` |
-| Video/Audio Calling | `agora_rtc_engine` |
-| Maps | `google_maps_flutter`, `flutter_polyline_points` |
-| Calendars | `syncfusion_flutter_calendar`, `mobkit_calendar`, `calendar_date_picker2` |
-| Documents/PDF | `syncfusion_flutter_pdfviewer`, `pdfx`, `printing`, `open_file`, `file_picker` |
-| Media | `media_kit`, `flutter_vlc_player`, `audioplayers`, `record`, `image_picker` |
-| Responsive UI | `flutter_screenutil` (design size 375×812) |
-| Build Tool (Android) | Gradle (Kotlin DSL — `build.gradle.kts`) |
-| Android Language | Kotlin (thin native shell only — `MainActivity.kt`) |
+| Layer                  | Technology                                                                                                                                                       |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework              | Flutter (Dart SDK `^3.7.0`)                                                                                                                                      |
+| Language               | Dart                                                                                                                                                             |
+| State Management       | GetX (`get: ^4.7.2`) — controllers + `Obx`/reactive widgets                                                                                                      |
+| Local Persistence      | `get_storage` (key-value) — **no Room/SQLite; no relational local database**                                                                                     |
+| Networking             | `dio` (REST/JSON), custom auth interceptor for token refresh                                                                                                     |
+| Local State (forms)    | `provider` (used specifically for the OASIS form builder)                                                                                                        |
+| Push Notifications     | `firebase_messaging`, `firebase_core`, `flutter_local_notifications`                                                                                             |
+| Video/Audio Calling    | `agora_rtc_engine`                                                                                                                                               |
+| Maps                   | `google_maps_flutter`, `flutter_polyline_points`                                                                                                                 |
+| Calendars              | `syncfusion_flutter_calendar`, `mobkit_calendar`, `calendar_date_picker2`                                                                                        |
+| Documents/PDF          | `syncfusion_flutter_pdfviewer`, `pdfx`, `printing`, `open_file`, `file_picker`                                                                                   |
+| Media                  | `media_kit`, `flutter_vlc_player`, `audioplayers`, `record`, `image_picker`                                                                                      |
+| Responsive UI          | `flutter_screenutil` (design size 375×812)                                                                                                                       |
+| Build Tool (Android)   | Gradle (Kotlin DSL — `build.gradle.kts`)                                                                                                                         |
+| Android Language       | Kotlin (thin native shell only — `MainActivity.kt`)                                                                                                              |
 | Compile/Min/Target SDK | Managed by Flutter (`flutter.compileSdkVersion` / `flutter.minSdkVersion` / `flutter.targetSdkVersion` — see `android/local.properties` / Flutter tool defaults) |
-| App ID / Package | `com.clinician.app` |
-| Java Compatibility | Java 11 (core library desugaring enabled) |
-| NDK Version | `27.0.12077973` |
-| Version Control | Git |
+| App ID / Package       | `com.clinician.app`                                                                                                                                              |
+| Java Compatibility     | Java 11 (core library desugaring enabled)                                                                                                                        |
+| NDK Version            | `27.0.12077973`                                                                                                                                                  |
+| Version Control        | Git                                                                                                                                                              |
 
 There is **no Hilt/Koin, no Room, no Jetpack Compose, and no native XML UI** — all UI and business logic live in the Flutter/Dart codebase under `lib/`. The `android/` and `ios/` folders are thin platform shells generated/maintained by Flutter tooling.
 
@@ -70,6 +70,7 @@ Screens and their local widgets, organized by feature (auth, home, calender_sect
 
 **Controllers (`lib/controller/`)**
 GetX `GetxController` classes responsible for:
+
 - Holding reactive UI state (`.obs` fields)
 - Calling repositories to fetch/update data
 - Polling (see Key Patterns below)
@@ -79,6 +80,7 @@ GetX `GetxController` classes responsible for:
 One repository per feature area (`calling_repo`, `request_repo`, `calender_repo`, `live_repo`, `chat_repo`, `timesheet_repo`, `notification_repo`, `profile_repo`) — wrap Dio calls to the backend and map JSON responses to models.
 
 **Services (`lib/services/`)**
+
 - `auth_api_services/auth_services.dart` — builds the Dio auth interceptor (token attach + refresh-on-401)
 - `token_manager/token_manager_service.dart` — reads/writes auth/session data via `get_storage`
 - `chat_notification_service.dart` — local notification channel setup and display for chat messages
@@ -170,11 +172,11 @@ flutter pub get
 
 Unlike a native Android project with Gradle product flavors, **this project does not currently define Flutter build flavors**. The API base URL is switched by directly editing `lib/core/constant/api_app_constant.dart` (see below) rather than via build variant. There is a commented-out "dev" configuration and an active "demo" configuration in that file — check with the team before building for a specific backend environment.
 
-| Environment | API Domain (from `ApiAppConstant`) | Notes |
-|---|---|---|
+| Environment         | API Domain (from `ApiAppConstant`)     | Notes                                        |
+| ------------------- | -------------------------------------- | -------------------------------------------- |
 | Dev (commented out) | `https://prohealth-dev.symmetry.care/` | Currently disabled in code (commented block) |
-| Demo (active) | `https://demo.symmetry.care/` | Currently the live/uncommented config |
-| Auth (all envs) | `https://auth.symmetry.care/` | Separate auth domain, always active |
+| Demo (active)       | `https://greenvalley.symmetry.care/`   | Currently the live/uncommented config        |
+| Auth (all envs)     | `https://auth.symmetry.care/`          | Separate auth domain, always active          |
 
 ### Where configuration lives
 
@@ -186,6 +188,7 @@ Unlike a native Android project with Gradle product flavors, **this project does
 ### Important
 
 Do not commit:
+
 - New/rotated API keys or tokens
 - Production Firebase credentials for a different project
 - Signing keystores or passwords
@@ -199,6 +202,7 @@ See table in section 7. The base URL and auth URL are defined as static fields i
 ### Authentication
 
 Token-based authentication. On login, tokens are persisted via `TokenManagerService` (backed by `get_storage`). `auth_services.dart` builds a Dio auth interceptor that:
+
 1. Attaches the stored access token to outgoing requests.
 2. On a `401`, uses a bare Dio instance (no interceptors) to call the refresh endpoint.
 3. Retries the original request with the new token on success, or force-logs-out the user on refresh failure.
@@ -217,6 +221,7 @@ No Swagger/Postman collection is currently referenced in the repository. If one 
 ## 9. Database Setup
 
 **The application does not use a local relational database (no Room/SQLite/Drift/Isar).** Local persistence is limited to `get_storage`, a lightweight key-value store used for:
+
 - Auth/session tokens (`TokenManagerService`)
 - Any other simple locally-cached preferences
 
@@ -227,31 +232,40 @@ There are no schema migrations to manage since there is no structured local data
 Key packages from `pubspec.yaml` (see the file for the full/current list and versions):
 
 **State & Navigation**
+
 - `get` — GetX controllers, routing, dialogs
 
 **Networking**
+
 - `dio` — HTTP client
 - `shared_preferences`, `get_storage` — local key-value storage
 
 **Firebase / Notifications**
+
 - `firebase_core`, `firebase_messaging`, `flutter_local_notifications`
 
 **Calling / Media**
+
 - `agora_rtc_engine`, `media_kit`, `media_kit_libs_audio`, `flutter_vlc_player`, `audioplayers`, `record`, `flutter_ringtone_player`
 
 **Maps**
+
 - `google_maps_flutter`, `flutter_polyline_points`, `url_launcher`
 
 **Calendar/Scheduling**
+
 - `syncfusion_flutter_calendar`, `mobkit_calendar`, `calendar_date_picker2`, `timelines_plus`, `grouped_list`
 
 **Documents/Files**
+
 - `syncfusion_flutter_pdfviewer`, `pdfx`, `printing`, `open_file`, `file_picker`, `image_picker`, `image_gallery_saver_plus`
 
 **Forms/UI**
+
 - `flutter_screenutil`, `flutter_svg`, `cached_network_image`, `dropdown_button2`, `animated_custom_dropdown`, `dotted_border`, `gradient_borders`, `signature`, `emoji_picker_flutter`, `elegant_notification`, `flutter_tts`, `custom_tooltip`, `flutter_html`, `provider` (OASIS form builder state)
 
 **Dev**
+
 - `flutter_lints`, `flutter_test`, `change_app_package_name`
 
 ## 11. Installation
@@ -297,11 +311,13 @@ cd android
 ## 13. Running the Application
 
 ### From Android Studio / VS Code
+
 1. Open the project root (the folder containing `pubspec.yaml`).
 2. Select a connected device or emulator.
 3. Run `main.dart`.
 
 ### From Command Line
+
 ```
 flutter run
 ```
@@ -339,16 +355,16 @@ No Flutter product flavors are currently configured (no `flavors` block in `pubs
 
 From `android/app/src/main/AndroidManifest.xml`:
 
-| Permission | Reason |
-|---|---|
-| `INTERNET` | API/network access |
-| `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` | Picking images/videos (profile photo, documents, visit media) on Android 13+ |
-| `RECORD_AUDIO` | Voice notes in chat, Agora calling |
-| `WRITE_EXTERNAL_STORAGE` (maxSdk 28) / `READ_EXTERNAL_STORAGE` | File access on older Android versions |
-| `POST_NOTIFICATIONS` | Required on Android 13+ to show any notification (chat, calls) |
-| `VIBRATE` | Notification vibration |
-| `WAKE_LOCK` | Keep device awake for heads-up/full-screen call notifications |
-| `USE_FULL_SCREEN_INTENT` | Full-screen incoming call UI on locked screen |
+| Permission                                                     | Reason                                                                       |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `INTERNET`                                                     | API/network access                                                           |
+| `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO`                       | Picking images/videos (profile photo, documents, visit media) on Android 13+ |
+| `RECORD_AUDIO`                                                 | Voice notes in chat, Agora calling                                           |
+| `WRITE_EXTERNAL_STORAGE` (maxSdk 28) / `READ_EXTERNAL_STORAGE` | File access on older Android versions                                        |
+| `POST_NOTIFICATIONS`                                           | Required on Android 13+ to show any notification (chat, calls)               |
+| `VIBRATE`                                                      | Notification vibration                                                       |
+| `WAKE_LOCK`                                                    | Keep device awake for heads-up/full-screen call notifications                |
+| `USE_FULL_SCREEN_INTENT`                                       | Full-screen incoming call UI on locked screen                                |
 
 The manifest also declares `<queries>` for `PROCESS_TEXT` and `http`/`https` `VIEW` intents (needed by `url_launcher` to open links/PDFs externally).
 
@@ -406,13 +422,16 @@ Confirm the current convention with the team before naming a new branch — hist
 ## 22. Troubleshooting
 
 **Gradle/Flutter build failure**
+
 ```
 flutter clean
 flutter pub get
 ```
+
 Then check: Flutter/Dart SDK version, Android NDK version (`27.0.12077973`), JDK version (11).
 
 **Dependency resolution error**
+
 ```
 flutter pub get
 flutter pub outdated
@@ -428,6 +447,7 @@ Check: Logcat/`flutter run` console, Firebase initialization (`google-services.j
 Check: FCM token registration, `POST_NOTIFICATIONS` permission granted, notification channel created (`ChatNotificationService.init()` in `main.dart`), app not battery-optimized/killed in a way that blocks background FCM delivery.
 
 **Emulator not detected**
+
 ```
 adb devices
 adb kill-server
@@ -448,10 +468,10 @@ adb start-server
 
 ## 25. Known Issues
 
-| Issue | Status | Workaround |
-|---|---|---|
-| `ApiAppConstant.endPointByAlias` ignores `appType` and always resolves to the demo domain | Open | Manually edit `ApiAppConstant` and rebuild for a different backend |
-| Release APK/AAB signed with debug keystore | Open | Configure a real release signing config before shipping to Play Console |
+| Issue                                                                                     | Status | Workaround                                                              |
+| ----------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------- |
+| `ApiAppConstant.endPointByAlias` ignores `appType` and always resolves to the demo domain | Open   | Manually edit `ApiAppConstant` and rebuild for a different backend      |
+| Release APK/AAB signed with debug keystore                                                | Open   | Configure a real release signing config before shipping to Play Console |
 
 Remove entries from this table once permanently resolved.
 
@@ -464,7 +484,7 @@ Remove entries from this table once permanently resolved.
 Dart `^3.7.0` (see `pubspec.yaml`); use a matching stable Flutter SDK.
 
 **Which API environment should developers use?**
-Currently the "demo" domain (`https://demo.symmetry.care/`) is active in `ApiAppConstant`; the dev domain is commented out. Confirm with the team which is appropriate for your task.
+Currently the "demo" domain (`https://greenvalley.symmetry.care/`) is active in `ApiAppConstant`; the dev domain is commented out. Confirm with the team which is appropriate for your task.
 
 **How do I create a release build?**
 `flutter build appbundle --release` (see section 15 regarding signing before a real release).
@@ -483,8 +503,8 @@ For access-related issues, contact the project administrator/official team chann
 
 ## 28. Change Log
 
-| Date | Version | Change |
-|---|---|---|
+| Date       | Version    | Change                                                                                                               |
+| ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------- |
 | 2026-08-13 | 1.0.2+5007 | Documented current Flutter/GetX architecture, API config, permissions, and known issues based on codebase inspection |
 
 ## Quick Start
@@ -499,6 +519,7 @@ flutter run
 ## Documentation Maintenance
 
 This README should be updated whenever there is a material change to:
+
 - Technology stack / Flutter or key package versions
 - API configuration (`ApiAppConstant`, base URLs)
 - Firebase configuration

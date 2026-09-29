@@ -14,6 +14,7 @@ import '../model/request/request_data_model.dart';
 import '../pages/video_calling/callingconst_screen.dart';
 import '../services/auth_api_services/auth_services.dart';
 import '../services/token_manager/token_manager_service.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class CallingController extends GetxController{
   final ApiService _api = Get.put(ApiService());
@@ -97,15 +98,16 @@ class CallingController extends GetxController{
 
   }) async {
     try {
-      var response = await _api.post(
-        CallingRepo.postRegisterDevice(),
-       {
-          "userId": userId,
-          "fcmToken": fcmToken,
-          "deviceType": deviceType,
-          "deviceName": deviceName
-        },
-      );
+      // var response = await _api.post(
+      //   CallingRepo.postRegisterDevice(),
+      //  {
+      //     "userId": userId,
+      //     "fcmToken": fcmToken,
+      //     "deviceType": deviceType,
+      //     "deviceName": deviceName
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('calling.registerDevice'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Device register Successfully");
@@ -143,16 +145,17 @@ class CallingController extends GetxController{
     try {
       print('Calling UseId $participantUserIds');
       final companyId = await TokenManager.getCompanyId();
-      var response = await _api.post(
-         CallingRepo.postCallInitiate(),
-        {
-          "participantUserIds": participantUserIds,
-          "callType": callType,
-          "companyId": companyId,
-          "isVideo": isVideo,                  // Optional, defaults to true if not provided
-        },
+      // var response = await _api.post(
+      //    CallingRepo.postCallInitiate(),
+      //   {
+      //     "participantUserIds": participantUserIds,
+      //     "callType": callType,
+      //     "companyId": companyId,
+      //     "isVideo": isVideo,                  // Optional, defaults to true if not provided
+      //   },
 
-      );
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('calling.initiate'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Call initiate Successfully");
@@ -198,15 +201,16 @@ class CallingController extends GetxController{
       }
 
       // 1️⃣ Call your backend from Flutter
-      final uri = Uri.parse('${ApiAppConstant.domain}calls/join');
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
-        body: jsonEncode({
-          'callId': callId,
-          'userId': userId,
-        }),
-      );
+      // final uri = Uri.parse('${ApiAppConstant.domain}calls/join');
+      // final response = await http.post(
+      //   uri,
+      //   headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
+      //   body: jsonEncode({
+      //     'callId': callId,
+      //     'userId': userId,
+      //   }),
+      // );  // MOCKED for local UI testing
+      final response = mockHttpResponse(MockData.get('calling.join'));
 
       if (response.statusCode != 200 || response.statusCode != 201) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -271,16 +275,17 @@ class CallingController extends GetxController{
       // final userIdRaw = payload['userId'];
 
       final int? callId = callIdRaw != null ? int.tryParse(callIdRaw.toString()) : null;
-      final uri = Uri.parse('${ApiAppConstant.domain}calls/end');
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
-        body: jsonEncode({
-          "callId": callId,
-          "userId": userId,
-          "status": "LEFT"
-        }),
-      );
+      // final uri = Uri.parse('${ApiAppConstant.domain}calls/end');
+      // final response = await http.post(
+      //   uri,
+      //   headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
+      //   body: jsonEncode({
+      //     "callId": callId,
+      //     "userId": userId,
+      //     "status": "LEFT"
+      //   }),
+      // );  // MOCKED for local UI testing
+      final response = mockHttpResponse(MockData.get('calling.end'));
     }catch(e){
 
     }
@@ -295,16 +300,17 @@ class CallingController extends GetxController{
       // final userIdRaw = payload['userId'];
 
       final int? callId = callIdRaw != null ? int.tryParse(callIdRaw.toString()) : null;
-      final uri = Uri.parse('${ApiAppConstant.domain}calls/decline');
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
-        body: jsonEncode({
-          "callId": callId,
-          "userId": userId,
-          //"status": "LEFT"
-        }),
-      );
+      // final uri = Uri.parse('${ApiAppConstant.domain}calls/decline');
+      // final response = await http.post(
+      //   uri,
+      //   headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken'},
+      //   body: jsonEncode({
+      //     "callId": callId,
+      //     "userId": userId,
+      //     //"status": "LEFT"
+      //   }),
+      // );  // MOCKED for local UI testing
+      final response = mockHttpResponse(MockData.get('calling.decline'));
       if(response.statusCode == 201 || response.statusCode == 200){
         print('Call decline');
       }else{
@@ -393,12 +399,13 @@ class CallingController extends GetxController{
     required String fcmToken,
   }) async {
     try {
-      var response = await _api.post(
-        CallingRepo.postUnRegisterDevice(),
-       {
-          "fcmToken": fcmToken,
-        },
-      );
+      // var response = await _api.post(
+      //   CallingRepo.postUnRegisterDevice(),
+      //  {
+      //     "fcmToken": fcmToken,
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('calling.unregisterDevice'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Device unregister Successfully");
@@ -436,15 +443,16 @@ class CallingController extends GetxController{
     try {
       print('Calling UseId $participantUserIds');
       final companyId = await TokenManager.getCompanyId();
-      var response = await _api.post(
-        CallingRepo.postAddParticipent(),
-        {
-          "callId": callId,
-          "inviterId": inviterId,
-          "participantUserIds": participantUserIds
-        },
+      // var response = await _api.post(
+      //   CallingRepo.postAddParticipent(),
+      //   {
+      //     "callId": callId,
+      //     "inviterId": inviterId,
+      //     "participantUserIds": participantUserIds
+      //   },
 
-      );
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('calling.addParticipant'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Add Participent Successfully");

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 
 import '../../../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 final ApiService Api = Get.put(ApiService());
 Future<void> saveMapAsJsonFile(
     BuildContext context, Map<String, dynamic> data, String fileName, {bool isUpdating=false, int templateID=-1}) async {
@@ -75,9 +76,14 @@ Future<bool> uploadFormTemplate(
   required Map<String, dynamic> formData,
 }) async {
   try {
-    var response = await Api.post(
-      '/form-templates',
-      formData,
+    // var response = await Api.post(
+    //   '/form-templates',
+    //   formData,
+    // );  // MOCKED for local UI testing
+    var response = mockResponse(
+      MockData.get('forms.uploadFormTemplate'),
+      statusCode: 201,
+      statusMessage: 'Created',
     );
     if (response.statusCode == 201) {
       print("UPLOADED CODE: ${response.data['template_code']}");

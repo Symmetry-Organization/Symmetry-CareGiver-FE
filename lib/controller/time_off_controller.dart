@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../core/constant/app_string.dart';
 import '../model/request/request_data_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class TimeController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -54,7 +55,8 @@ class TimeController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getTimeOffTypes());
+      // final res = await _api.get(ProfileRepository.getTimeOffTypes());  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timeOff.types'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data) {
@@ -83,7 +85,8 @@ class TimeController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getLeaveType());
+      // final res = await _api.get(ProfileRepository.getLeaveType());  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timeOff.leaveTypes'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data) {
@@ -121,33 +124,34 @@ class TimeController extends GetxController {
       isTimeOffSaveLoading.value = true;
       error.value = '';
 
-      final res = await _api.post(
-        ProfileRepository.postAddTimeOffRequest(),
-        leaveType == 'One day'
-            ? {
-          "employeeId": empId,
-          "timeOffTypeId": timeOffTypeId,
-          "leaveTypeId": leaveTypeId,
-          "startDate": startDate,
-          "reason": reason,
-        }
-            : leaveType == "Multi days"
-            ? {
-          "employeeId": empId,
-          "timeOffTypeId": timeOffTypeId,
-          "leaveTypeId": leaveTypeId,
-          "startDate": startDate,
-          "endDate": endDate,
-          "reason": reason,
-        }
-            : {
-          "employeeId": empId,
-          "timeOffTypeId": timeOffTypeId,
-          "leaveTypeId": leaveTypeId,
-          "reason": reason,
-          "firstHalf": firstHalf,
-        },
-      );
+      // final res = await _api.post(
+      //   ProfileRepository.postAddTimeOffRequest(),
+      //   leaveType == 'One day'
+      //       ? {
+      //     "employeeId": empId,
+      //     "timeOffTypeId": timeOffTypeId,
+      //     "leaveTypeId": leaveTypeId,
+      //     "startDate": startDate,
+      //     "reason": reason,
+      //   }
+      //       : leaveType == "Multi days"
+      //       ? {
+      //     "employeeId": empId,
+      //     "timeOffTypeId": timeOffTypeId,
+      //     "leaveTypeId": leaveTypeId,
+      //     "startDate": startDate,
+      //     "endDate": endDate,
+      //     "reason": reason,
+      //   }
+      //       : {
+      //     "employeeId": empId,
+      //     "timeOffTypeId": timeOffTypeId,
+      //     "leaveTypeId": leaveTypeId,
+      //     "reason": reason,
+      //     "firstHalf": firstHalf,
+      //   },
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timeOff.addRequest'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final data = res.data as Map<String, dynamic>?;
@@ -219,7 +223,8 @@ class TimeController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getTimeOffHistory(empId: empId));
+      // final res = await _api.get(ProfileRepository.getTimeOffHistory(empId: empId));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('timeOff.history'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for (var i in res.data['history']) {

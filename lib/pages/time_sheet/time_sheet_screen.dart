@@ -25,6 +25,10 @@ class TimeSheetPage extends StatefulWidget {
 
 class _TimeSheetPageState extends State<TimeSheetPage>
     with SingleTickerProviderStateMixin, RouteAware {
+  static const double _addVisitWidth = 110;
+  static const double _addVisitIconSize = 16;
+  static const double _addVisitLineHeight = 23;
+
   late TabController _tabController;
   VisitController visitController = Get.put(VisitController());
   TimeSheetController timeSheetController = Get.put(TimeSheetController());
@@ -100,48 +104,36 @@ class _TimeSheetPageState extends State<TimeSheetPage>
                           ),
                         ),
                       ),
-            Obx(
-                  () => timeSheetController.selectedTypeRecord.value != "Visit"
-                      || timeSheetController.selectedTypeRecord.value != "All"
-                  ? customWidth(0.w) : Offstage()),
-                      Obx(() {
-                        final type =
-                            timeSheetController.selectedTypeRecord.value;
-                        final showAddVisit =
-                            type != "Visit" && type != "All";
-
-                        return showAddVisit
-                            ? Padding(
-                          padding: EdgeInsets.only(left: 15.w),
-                          child: PrimaryOutlinedButton(
-                            text: "Add",
-                            onPressed: () {
-                              Get.to(
-                                    () => AddVisitPage(
-                                  visitStatus: timeSheetController
-                                      .selectedTypeRecord.value,
-                                ),
-                                transition: Transition.rightToLeft,
-                                duration:
-                                const Duration(milliseconds: 300),
-                                // curve: Curves.easeInOutCubic,
-                              );
-                            },
-                            textStyle:
-                            AppTextStyle.normal12style.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primaryAppColor,
+                      customWidth(15.w),
+                      PrimaryOutlinedButton(
+                        text: "Add Visit",
+                        onPressed: () {
+                          Get.to(
+                            () => AddVisitPage(
+                              visitStatus:
+                                  timeSheetController.selectedTypeRecord.value,
                             ),
-                            width: 80.w,
-                            radius: 6,
-                            height: 35.h,
-                            borderWidth: 1.w,
-                            icon: Icon(Icons.add,
-                                color: AppColors.primaryAppColor),
-                          ),
-                        )
-                            : const SizedBox.shrink();
-                      }),
+                            transition: Transition.rightToLeft,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        },
+                        // Figma: Fira Sans 700 / 12px / 23px line-height
+                        textStyle: AppTextStyle.normal12style.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: _addVisitLineHeight / 12,
+                          color: AppColors.primaryAppColor,
+                        ),
+                        width: _addVisitWidth.w,
+                        radius: 6,
+                        height: 35.h,
+                        borderWidth: 1.w,
+                        spaceBetweenIconText: 4,
+                        icon: Icon(
+                          Icons.add,
+                          size: _addVisitIconSize.w,
+                          color: AppColors.primaryAppColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),

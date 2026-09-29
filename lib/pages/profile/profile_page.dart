@@ -1,12 +1,13 @@
 import 'package:clinician_app/core/constant/constant_import.dart';
 import 'package:clinician_app/core/ui/common_appbar.dart';
+import 'package:clinician_app/pages/profile/availability_page.dart';
 import 'package:clinician_app/pages/profile/document.dart';
 import 'package:clinician_app/pages/profile/edit_profile.dart';
 import 'package:clinician_app/pages/profile/my_earnings_page.dart';
 import 'package:clinician_app/pages/profile/pending_page.dart';
 import 'package:clinician_app/pages/profile/time_off_page.dart';
 import 'package:clinician_app/pages/profile/widgets/logout_dailog.dart';
-import 'package:clinician_app/pages/profile/widgets/profile_menu.dart';
+import 'package:clinician_app/pages/profile/widgets/profile_menu_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,6 +22,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // Figma: 2-column grid, 17 px side inset, tiles 168 × 128 with 15 px radius
+  static const double _gridSidePadding = 17;
+  static const double _gridGap = 16;
+  static const double _tileWidth = 168;
+  static const double _tileHeight = 128;
+
   ProfileController controller = Get.put(ProfileController());
   @override
   void initState() {
@@ -126,66 +133,72 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),) ,
-                    customHeight(10.h),
+                    customHeight(24.h),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: textMenuWidget(
-                        title: "Document Update",
-                        ontap: () {
-                          Get.to(() => DocumnetPage(empId: controller.employeeId.value,), transition: Transition.cupertino,
-                            duration: const Duration(milliseconds: 350),);
-                        },
-                        imageicon: AppAsset.document,
+                      padding: EdgeInsets.symmetric(horizontal: _gridSidePadding.w),
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: _gridGap.h,
+                        crossAxisSpacing: _gridGap.w,
+                        childAspectRatio: _tileWidth / _tileHeight,
+                        children: [
+                          ProfileMenuTile(
+                            title: "Document Update",
+                            image: AppAsset.document,
+                            onTap: () => Get.to(
+                              () => DocumnetPage(empId: controller.employeeId.value),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 350),
+                            ),
+                          ),
+                          ProfileMenuTile(
+                            title: "Time Off",
+                            image: AppAsset.timer,
+                            onTap: () => Get.to(
+                              () => TimeOffPage(employeeId: controller.employeeId.value),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 350),
+                            ),
+                          ),
+                          ProfileMenuTile(
+                            title: "Pending Visit Notes/ Oasis",
+                            image: AppAsset.pending,
+                            onTap: () => Get.to(
+                              () => PendingVisits(),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 350),
+                            ),
+                          ),
+                          ProfileMenuTile(
+                            title: "My Earning",
+                            image: AppAsset.earning,
+                            onTap: () => Get.to(
+                              () => MyEarningPage(),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 350),
+                            ),
+                          ),
+                          ProfileMenuTile(
+                            title: "Availability",
+                            svg: AppAsset.availabilitySvgIcon,
+                            onTap: () => Get.to(
+                              () => AvailabilityPage(),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 350),
+                            ),
+                          ),
+                          ProfileMenuTile(
+                            title: "Logout",
+                            image: AppAsset.logout,
+                            isDestructive: true,
+                            onTap: () => showLogoutConfirmationDialog(context),
+                          ),
+                        ],
                       ),
                     ),
-                    Divider(height: 1),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: textMenuWidget(
-                        ontap: () {
-                          Get.to(() => TimeOffPage(employeeId: controller.employeeId.value,), transition: Transition.cupertino,
-                            duration: const Duration(milliseconds: 350),);
-                        },
-                        title: "Time Off",
-                        imageicon: AppAsset.timer,
-                      ),
-                    ),
-                    Divider(height: 1),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: textMenuWidget(
-                        title: "Pending Visit Notes/ Oasis",
-                        imageicon: AppAsset.pending,
-                        ontap: () {
-                          Get.to(() => PendingVisits(), transition: Transition.cupertino,
-                            duration: const Duration(milliseconds: 350),);
-                        },
-                      ),
-                    ),
-                    Divider(height: 1),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: textMenuWidget(
-                        ontap: () {
-                          Get.to(() => MyEarningPage(), transition: Transition.cupertino,
-                            duration: const Duration(milliseconds: 350),);
-                        },
-                        title: "My Earning",
-                        imageicon: AppAsset.earning,
-                      ),
-                    ),
-                    Divider(height: 1),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: textMenuWidget(
-                        ontap: () {
-                          showLogoutConfirmationDialog(context);
-                        },
-                        title: "Logout",
-                        imageicon: AppAsset.logout,
-                      ),
-                    ),
-                    Divider(height: 1),
+                    customHeight(24.h),
                   ],
                 ),
               ),

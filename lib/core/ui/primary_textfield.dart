@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PrimaryTextField extends StatelessWidget {
+  static const double _defaultCursorHeight = 22;
   const PrimaryTextField({
     super.key,
     final Key? fieldKey,
@@ -164,7 +165,9 @@ class PrimaryTextField extends StatelessWidget {
         autofocus: autofocus,
         textAlign: textAlign,
         cursorColor: style?.color,
-        cursorHeight: style?.height ?? 22,
+        cursorHeight: (style?.fontSize != null && style?.height != null)
+            ? style!.fontSize! * style!.height!
+            : _defaultCursorHeight,
         // obscuringCharacter: obscuringCharacter ?? "●",
         style: style ?? AppTextStyle.normal12style.copyWith(
           fontWeight: FontWeight.w400,

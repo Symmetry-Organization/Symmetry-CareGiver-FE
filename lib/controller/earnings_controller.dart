@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../model/profile/my_earning_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class EarningsController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -54,7 +55,8 @@ class EarningsController extends GetxController {
       isEarningLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getMyEarning());
+      // final res = await _api.get(ProfileRepository.getMyEarning());  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('earnings.summary'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         itemData = MyTotalEarningModel(
@@ -91,7 +93,8 @@ class EarningsController extends GetxController {
       isEarningLoadingList.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getMyEarningTodayVisit());
+      // final res = await _api.get(ProfileRepository.getMyEarningTodayVisit());  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('earnings.todayVisits'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         for(var items in res.data){
@@ -103,6 +106,7 @@ class EarningsController extends GetxController {
               startTime: items['startTime'] != null ? formatTimeToAMPM(items['startTime']) : '',
               endTime: items['endTime'] != null ? formatTimeToAMPM(items['endTime']) : '',
               dayLabel: items['dayLabel'] ?? '',
+              durationMinutes: _minutesBetween(items['startTime'], items['endTime']),
               visit_charge: double.parse(
                 (((items['visit_charge'] as num?)?.toDouble() ?? 0.0)
                     .toStringAsFixed(2)),
@@ -130,7 +134,8 @@ class EarningsController extends GetxController {
       isAllEarningLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(ProfileRepository.getMyAllEarning(clinicianId: clinitianId));
+      // final res = await _api.get(ProfileRepository.getMyAllEarning(clinicianId: clinitianId));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('earnings.allEarning'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         itemData = MyAllEarningData(
@@ -159,6 +164,14 @@ class EarningsController extends GetxController {
         today: 0);
   }
 
+}
+
+int _minutesBetween(dynamic start, dynamic end) {
+  final s = DateTime.tryParse(start?.toString() ?? '');
+  final e = DateTime.tryParse(end?.toString() ?? '');
+  if (s == null || e == null) return 0;
+  final m = e.difference(s).inMinutes;
+  return m < 0 ? 0 : m;
 }
 
 class PriceDurationModel {

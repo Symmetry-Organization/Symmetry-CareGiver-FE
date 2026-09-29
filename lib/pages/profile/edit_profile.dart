@@ -18,6 +18,8 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  static const double _saveButtonHeight = 21;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
    ProfileController controller = Get.put(ProfileController());
 
@@ -111,7 +113,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   label: "Save",
                   padding: EdgeInsets.zero,
                   labelStyle: TextStyle(color: Colors.white, fontSize: 13.sp),
-                  height: 30.h,
+                  buttonColor: AppColors.saveButtonBlue,
+                  height: _saveButtonHeight.h,
                   width: 60.w,
                   borderRadius: 6,
                 ),
@@ -183,7 +186,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         customHeight(17.h),
                         PrimaryTextField(
                           controller: controller.firstNameController.value,
-                          filledColor: Colors.white,
+                          filledColor: AppColors.textFieldBackGColor,
                           hintText: "First Name",
                             validator: (value) => Validators.validateText()
 
@@ -191,7 +194,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         customHeight(23.h),
                         PrimaryTextField(
                           controller: controller.lastNameController.value,
-                          filledColor: Colors.white,
+                          filledColor: AppColors.textFieldBackGColor,
                           hintText: "Last Name",
                           validator: (value) => Validators.validateText(),
                         ),
@@ -205,13 +208,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             return null;
                           },
                           controller: controller.phoneController.value,
-                          filledColor: Colors.white,
+                          filledColor: AppColors.textFieldBackGColor,
                           hintText: "Phone Number",
                         ),
                         customHeight(23.h),
                         PrimaryTextField(
                           controller: controller.emailController.value,
-                          filledColor: Colors.white,
+                          filledColor: AppColors.textFieldBackGColor,
                           hintText: "Email Address",
                           validator: (value) => Validators.validateEmail(value)
                         ),

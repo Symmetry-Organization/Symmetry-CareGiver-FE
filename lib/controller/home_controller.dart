@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import '../model/request/patient_schedule_model.dart';
 import '../model/request/requestList_model.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 class HomeController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -241,13 +242,14 @@ class HomeController extends GetxController {
       isRequestLoading.value = true;
       error.value = '';
 
-      final res = await _api.get(
-        RequestTabRepo.getRequestAllData(
-          clinicianId: clinicianId,
-          visitStatus: visitStatus,
-          patientName: patientName,
-        ),
-      );
+      // final res = await _api.get(
+      //   RequestTabRepo.getRequestAllData(
+      //     clinicianId: clinicianId,
+      //     visitStatus: visitStatus,
+      //     patientName: patientName,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('request.todayVisits'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // ✅ handle response arriving as a raw String
@@ -346,8 +348,9 @@ class HomeController extends GetxController {
       isScheduleLoading.value = true;
       error.value = '';
 
-      final res =
-      await _api.get(RequestTabRepo.getRequestSchedule(visitId: visitId));
+      // final res =
+      // await _api.get(RequestTabRepo.getRequestSchedule(visitId: visitId));  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('request.visitSchedule'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final dynamic data =

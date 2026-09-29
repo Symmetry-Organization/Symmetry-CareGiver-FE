@@ -7,6 +7,17 @@ import '../model/calender/calender_model.dart';
 import '../model/calender/list_model.dart';
 import '../pages/calender_section/calender_screen.dart';
 import '../services/auth_api_services/auth_services.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
+
+/// Status values accepted by the calendar list endpoint.
+abstract final class CalendarStatusFilter {
+  static const String pending = 'pending';
+  static const String accepted = 'accepted';
+  static const String rejected = 'rejected';
+  static const String completed = 'completed';
+
+  static const List<String> all = [pending, accepted, rejected, completed];
+}
 
 class CalenderListController extends GetxController {
   final ApiService _api = Get.put(ApiService());
@@ -19,6 +30,19 @@ class CalenderListController extends GetxController {
   final RxList<Appointment> calendarAppointments = <Appointment>[].obs;
 
   RxInt contentTypeInx = 0.obs;
+
+  /// Filter sheet state. Zone is applied client-side over the loaded list;
+  /// status is sent to the API on the next refresh.
+  final Rxn<bool> zoneFilterInZone = Rxn<bool>();
+  final RxString statusFilter = CalendarStatusFilter.pending.obs;
+
+  /// Loaded visits narrowed by the zone filter (null = all).
+  List<VisitsListData> get filteredListVisits {
+    final visits = calenderListModel.value.visits;
+    final inZone = zoneFilterInZone.value;
+    if (inZone == null) return visits;
+    return visits.where((v) => v.inZone == inZone).toList();
+  }
   Rx<DateTime> currentDate = DateTime.now().obs;
   final calController = CalendarController().obs;
 
@@ -26,7 +50,10 @@ class CalenderListController extends GetxController {
   // ✅ overlap/rate protection (no periodic polling anymore)
   // ============================
   bool _pollInProgress = false;
-  DateTime _lastPollAt = DateTime.fromMillisecondsSinceEpoch(0);
+
+  /// A load asked for while another one was in flight. Only the latest one is
+  /// kept — stepping through dates quickly must end on the date now selected.
+  ({String status, String empIds, bool showLoader})? _queuedPoll;
 
   // ✅ show loader only first time
   bool _hasLoadedOnce = false;
@@ -37,7 +64,10 @@ class CalenderListController extends GetxController {
       DateFormat('MMMM d, yyyy').format(currentDate.value);
 
   void changeDate(int day) {
-    currentDate.value = currentDate.value.add(Duration(days: day));
+    // Day arithmetic on the calendar fields, not on a Duration: adding 24 h
+    // across a DST boundary can land back on the same date.
+    final DateTime current = currentDate.value;
+    currentDate.value = DateTime(current.year, current.month, current.day + day);
     if (contentTypeInx.value == 1) {
       calController.value.displayDate = currentDate.value;
     }
@@ -68,11 +98,10 @@ class CalenderListController extends GetxController {
     required String empIds,
     required bool showLoader,
   }) async {
-    if (_pollInProgress) return;
-
-    final now = DateTime.now();
-    if (now.difference(_lastPollAt).inMilliseconds < 300) return;
-    _lastPollAt = now;
+    if (_pollInProgress) {
+      _queuedPoll = (status: status, empIds: empIds, showLoader: showLoader);
+      return;
+    }
 
     _pollInProgress = true;
     final date = formattedDate;
@@ -110,6 +139,16 @@ class CalenderListController extends GetxController {
         isListLoading.value = false;
       }
       _pollInProgress = false;
+    }
+
+    final queued = _queuedPoll;
+    if (queued != null) {
+      _queuedPoll = null;
+      await _pollOnce(
+        status: queued.status,
+        empIds: queued.empIds,
+        showLoader: queued.showLoader,
+      );
     }
   }
 
@@ -197,12 +236,13 @@ class CalenderListController extends GetxController {
       }
       error.value = '';
 
-      final res = await _api.get(
-        CalenderRepository.getListCalender(
-          status: status,
-          date: date,
-        ),
-      );
+      // final res = await _api.get(
+      //   CalenderRepository.getListCalender(
+      //     status: status,
+      //     date: date,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('calendar.visitList'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         List<VisitsListData> visitDataList = [];
@@ -265,13 +305,14 @@ class CalenderListController extends GetxController {
       }
       error.value = '';
 
-      final res = await _api.get(
-        CalenderRepository.getCalenderData(
-          dateFrom: dateFrom,
-          dateTo: dateTo,
-          empIds: empIds,
-        ),
-      );
+      // final res = await _api.get(
+      //   CalenderRepository.getCalenderData(
+      //     dateFrom: dateFrom,
+      //     dateTo: dateTo,
+      //     empIds: empIds,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final res = mockResponse(MockData.get('calendar.calendarData'));
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         // ignore: avoid_print

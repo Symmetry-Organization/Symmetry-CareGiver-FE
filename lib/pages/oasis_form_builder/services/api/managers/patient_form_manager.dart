@@ -6,6 +6,7 @@ import '../../../../../core/ui/const_sucess_popup.dart';
 import '../../../../../services/auth_api_services/auth_services.dart';
 import '../../../data/patient_form_data.dart';
 import '../repository/form_builder_repository.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 final ApiService Api = Get.put(ApiService());
 /// get patient form API
 Future<PatientByPtIdFormModel> getPatientFormByPatientID(BuildContext context,
@@ -21,9 +22,10 @@ Future<PatientByPtIdFormModel> getPatientFormByPatientID(BuildContext context,
     }
   }
   try {
-    final response = await Api.get(
-       FormBuilderRepository.getPatientFormByPatientFormID(
-            patientFormID: patientFormId));
+    // final response = await Api.get(
+    //    FormBuilderRepository.getPatientFormByPatientFormID(
+    //         patientFormID: patientFormId));  // MOCKED for local UI testing
+    final response = mockResponse(MockData.get('forms.patientFormById'));
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = response.data;
 

@@ -18,6 +18,9 @@ class VisitPage extends StatefulWidget {
 }
 
 class _VisitPageState extends State<VisitPage> {
+  static const double _chooseDateFontSize = 8;
+  static const double _chooseDateLineHeight = 23;
+
   TimeSheetController timeSheetController = Get.put(TimeSheetController());
   // @override
   // void dispose() {
@@ -55,34 +58,36 @@ class _VisitPageState extends State<VisitPage> {
 
                   },
                     child: Container(
-                      width: 28.w,
                       height: 28.h,
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.r),
                         border: Border.all(color: AppColors.borderGrey),
                       ),
-                      child: SvgPicture.asset(
-                        AppAsset.pickScheduleSvgIcon,
-                        width: 14.w,
-                        colorFilter: AppColors.defaultTxtGrey.getSvgColor,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Choose Date',
+                            // Figma: Fira Sans 400 / 8px / 23px line-height
+                            style: AppTextStyle.normal12style.copyWith(
+                              fontSize: _chooseDateFontSize.sp,
+                              fontWeight: FontWeight.w400,
+                              height: _chooseDateLineHeight / _chooseDateFontSize,
+                              color: AppColors.defaultTxtGrey,
+                            ),
+                          ),
+                          customWidth(8.w),
+                          SvgPicture.asset(
+                            AppAsset.pickScheduleSvgIcon,
+                            width: 14.w,
+                            colorFilter: AppColors.defaultTxtGrey.getSvgColor,
+                          ),
+                        ],
                       ),
                     )),
 
-                // PrimaryOutlinedButton(
-                //   text: "Choose Date",
-                //   onPressed:
-                //   isIconStart: true,
-                //   icon: Icon(Icons.calendar_month_sharp, color: AppColors.grey),
-                //   textStyle: AppTextStyle.regular10style.copyWith(
-                //     color: AppColors.grey,
-                //   ),
-                //   buttonColor: AppColors.grey,
-                //   borderWidth: 1,
-                //   width: 120.h,
-                //   height: 28.h,
-                //   radius: 6,
-                // ),
               ],
             ),
 

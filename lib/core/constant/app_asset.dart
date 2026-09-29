@@ -28,6 +28,7 @@ class AppAsset {
   static const String sucessImg = 'assets/png/sucess.png';
   static const String passwordImg = 'assets/png/password.png';
   static const String loginBgImg = 'assets/png/login.png';
+  static const String loginDoctorImg = 'assets/png/login_doctor.png';
 
   // -------------------- SVG -----------------------
   static const String calenderSvgIcon = 'assets/svg/calender_icon.svg';
@@ -35,6 +36,14 @@ class AppAsset {
   static const String faceRecognitionSvgIcon =
       'assets/svg/face_recognition_icon.svg';
   static const String passwordSvgIcon = 'assets/svg/password_icon.svg';
+  static const String faceIdSvgIcon = 'assets/svg/face_id_icon.svg';
+  static const String mapMarkerSvgIcon = 'assets/svg/map_marker_icon.svg';
+  static const String availabilitySvgIcon = 'assets/svg/availability_icon.svg';
+  static const String earningTotalSvgIcon = 'assets/svg/earning_total_earning.svg';
+  static const String earningTodaySvgIcon = 'assets/svg/earning_today.svg';
+  static const String earningWeekSvgIcon = 'assets/svg/earning_this_week.svg';
+  static const String earningMonthSvgIcon = 'assets/svg/earning_this_month.svg';
+  static const String earningHoursSvgIcon = 'assets/svg/earning_total_hours.svg';
   static const String notificationSvgIcon = 'assets/svg/notification_icon.svg';
   static const String fabChatSvgIcon = 'assets/svg/fab_chat_icon.svg';
   static const String closeSvgIcon = 'assets/svg/close_icon.svg';
@@ -56,6 +65,8 @@ class AppAsset {
   static const String stopWatchSvgIcon = 'assets/svg/stop_watch_icon.svg';
   static const String tickCalenderSvgIcon = 'assets/svg/tick_calender_icon.svg';
   static const String carSvgIcon = 'assets/svg/car_icon.svg';
+  static const String documentExpiryCalenderSvgIcon =
+      'assets/svg/document_expiry_calender_icon.svg';
 
   // ------- request
   static const String acceptedSvgIcon = 'assets/svg/request/accepted_icon.svg';

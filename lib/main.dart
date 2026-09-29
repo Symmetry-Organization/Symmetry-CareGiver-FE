@@ -8,6 +8,7 @@ import 'package:clinician_app/pages/video_calling/call_ring.dart';
 import 'package:clinician_app/pages/video_calling/calling_notification.dart';
 import 'package:clinician_app/pages/video_calling/message_notification.dart';
 import 'package:clinician_app/services/chat_notification_service.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await GetStorage.init();
+
+  // All API calls are commented out for local UI testing — the app reads its
+  // data from assets/mock/mock_data.json instead. Load it before the first
+  // frame so MockData.get() can stay synchronous at the call sites.
+  await MockData.load();
 
   // if (Firebase.apps.isEmpty) {
   //WidgetsFlutterBinding.ensureInitialized();

@@ -20,7 +20,7 @@ class CallNotificationService {
     const initSettings = InitializationSettings(android: androidInit);
 
     await _fln.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse r) async {
         // Runs when app is in foreground/background and user taps action.
         await _handleAction(r, navigatorKey);
@@ -85,15 +85,15 @@ class CallNotificationService {
     );
 
     await _fln.show(
-      _notifId,
-      'Incoming call',
-      callerName,
-      NotificationDetails(android: androidDetails),
+      id: _notifId,
+      title: 'Incoming call',
+      body: callerName,
+      notificationDetails: NotificationDetails(android: androidDetails),
       payload: payload,
     );
   }
 
-  static Future<void> dismiss() async => _fln.cancel(_notifId);
+  static Future<void> dismiss() async => _fln.cancel(id: _notifId);
 
   static Future<void> _handleAction(
       NotificationResponse response,

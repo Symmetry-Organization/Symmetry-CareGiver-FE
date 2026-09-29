@@ -92,6 +92,7 @@ import '../../../model/chart_patient_referral_data_model.dart';
 import '../../../model/employee_type.dart';
 import '../../../model/question_markup_model.dart';
 import '../../../widgets/dynamic/model/option_data_model.dart';
+import 'package:clinician_app/services/mock/mock_data_service.dart';
 
 // Other imports
 class FormBuilderManager {
@@ -110,9 +111,10 @@ class FormBuilderManager {
     List<QuestionDataModel> itemsList = [];
     Map<String, dynamic> commentUsers = {};
     try {
-      final response = await _api.get(
-          FormBuilderRepository.getPatientFormByPatientFormIDWithSub(
-              patientFormID: patientFormId, subFormID: subFormId!));
+      // final response = await _api.get(
+      //     FormBuilderRepository.getPatientFormByPatientFormIDWithSub(
+      //         patientFormID: patientFormId, subFormID: subFormId!));  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.patientFormQuestions'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         for (var item in response.data['data']["questions"]) {
           try {
@@ -145,10 +147,11 @@ class FormBuilderManager {
     List<Map> answers,
   ) async {
     try {
-      var response = await _api.patchList(
-         FormBuilderRepository.patientFormAnswer,
-        answers,
-      );
+      // var response = await _api.patchList(
+      //    FormBuilderRepository.patientFormAnswer,
+      //   answers,
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.answerSaved'));
       // print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         // orgDocumentGet(context);
@@ -179,9 +182,10 @@ class FormBuilderManager {
     required int patientFormId,
   }) async {
     try {
-      var response = await _api.patchNoRequest(
-        path: FormBuilderRepository.patchIsAssistantForm(visitId: visitId.toString(), formId: patientFormId.toString()),
-      );
+      // var response = await _api.patchNoRequest(
+      //   path: FormBuilderRepository.patchIsAssistantForm(visitId: visitId.toString(), formId: patientFormId.toString()),
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.assistantFormReview'));
       // print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = response.data;
@@ -213,9 +217,10 @@ class FormBuilderManager {
       int patientFormId,
       ) async {
     try {
-      var response = await _api.patchNoRequest(
-        path: FormBuilderRepository.patchRestartForm(patientFormId: patientFormId),
-      );
+      // var response = await _api.patchNoRequest(
+      //   path: FormBuilderRepository.patchRestartForm(patientFormId: patientFormId),
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.restart'));
       // print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         // orgDocumentGet(context);
@@ -248,15 +253,16 @@ class FormBuilderManager {
     String? patientName,
   }) async {
     try {
-      var response = await _api.post(
-         FormBuilderRepository.patientReferralList,
-       {
-          "page": page,
-          "records": perPage,
-          if (patientName != null && patientName.isNotEmpty)
-            "search": patientName,
-        },
-      );
+      // var response = await _api.post(
+      //    FormBuilderRepository.patientReferralList,
+      //  {
+      //     "page": page,
+      //     "records": perPage,
+      //     if (patientName != null && patientName.isNotEmpty)
+      //       "search": patientName,
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.patientReferralList'), statusCode: 201, statusMessage: 'Created');
       final List list = response.data['patientReferrals'];
       // print(list.runtimeType);
       if (response.statusCode == 201) {
@@ -288,11 +294,12 @@ class FormBuilderManager {
   }) async {
     try {
       print('Raw seleted form data: $formData');
-      var response = await _api.post(
-         FormBuilderRepository.getPatientFormByPatientFormID(
-            patientFormID: patientFormID),
-         formData,
-      );
+      // var response = await _api.post(
+      //    FormBuilderRepository.getPatientFormByPatientFormID(
+      //       patientFormID: patientFormID),
+      //    formData,
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.savePatientForm'), statusCode: 201, statusMessage: 'Created');
       if (response.statusCode == 201) {
         print('Raw seleted form response: ${response.toString()}');
         return true;
@@ -315,16 +322,17 @@ class FormBuilderManager {
       }) async {
     try {
       print('Raw seleted form data: $formData');
-      var response = await _api.patch(
-        FormBuilderRepository.getPatientFormByPatientFormID(
-            patientFormID: patientFormID),
-        isFaceToFace == true ? {
-          "status" : formData,
-          "face_to_face": isFaceToFace
-        } : {
-          "status" : formData
-        },
-      );
+      // var response = await _api.patch(
+      //   FormBuilderRepository.getPatientFormByPatientFormID(
+      //       patientFormID: patientFormID),
+      //   isFaceToFace == true ? {
+      //     "status" : formData,
+      //     "face_to_face": isFaceToFace
+      //   } : {
+      //     "status" : formData
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.patchPatientForm'));
       if (response.statusCode == 201 || response.statusCode == 200) {
         print('Raw seleted form response: ${response.toString()}');
         var data = response.data;
@@ -358,10 +366,11 @@ class FormBuilderManager {
     required formData,
   }) async {
     try {
-      var response = await _api.postWithFormData(
-        path: FormBuilderRepository.uploadFile,
-        formData: formData,
-      );
+      // var response = await _api.postWithFormData(
+      //   path: FormBuilderRepository.uploadFile,
+      //   formData: formData,
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.uploadFile'), statusCode: 201, statusMessage: 'Created');
       print(response);
       if (response.statusCode == 201) {
         return response.data['url'];
@@ -381,10 +390,11 @@ class FormBuilderManager {
     required String url,
   }) async {
     try {
-      var response = await _api.deleteWithData(
-        path: FormBuilderRepository.deleteFile,
-        data: {"url": url},
-      );
+      // var response = await _api.deleteWithData(
+      //   path: FormBuilderRepository.deleteFile,
+      //   data: {"url": url},
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.deleteFile'));
       if (response.statusCode == 200) {
         print('Image Deleted');
         //Deleted Succesfully
@@ -400,8 +410,9 @@ class FormBuilderManager {
   Future<ChartPatientReferral?> getPatientReferral(BuildContext context,
       {required referralID}) async {
     try {
-      final response = await _api.get(
-              FormBuilderRepository.getPatientReferral(referralID: referralID));
+      // final response = await _api.get(
+      //         FormBuilderRepository.getPatientReferral(referralID: referralID));  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.patientReferral'));
       if (response.statusCode == 200) {
         // print(response.data);
         return ChartPatientReferral.fromJson(response.data);
@@ -416,8 +427,9 @@ class FormBuilderManager {
   /// Get All Forms
   Future<List<PatientForm>> getAllFormsData(BuildContext context) async {
     try {
-      final response =
-          await _api.get( FormBuilderRepository.getAllForms);
+      // final response =
+      //     await _api.get( FormBuilderRepository.getAllForms);  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.allForms'));
       if (response.statusCode == 200) {
         return PatientForm.fromJsonList(response.data);
       } else {
@@ -434,8 +446,9 @@ class FormBuilderManager {
 /// Get All Charts of Patient
   Future<List<PatientChart>> getPatientCharts(BuildContext context, {required int patientId}) async {
     try {
-      final response =
-          await _api.get( FormBuilderRepository.getPatientCharts(patientId: patientId));
+      // final response =
+      //     await _api.get( FormBuilderRepository.getPatientCharts(patientId: patientId));  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.patientCharts'));
       if (response.statusCode == 200) {
         return PatientChart.listFromJson(response.data);
       } else {
@@ -451,8 +464,9 @@ class FormBuilderManager {
   /// Get All SubForms
   Future<List<PatientSubForm>> getAllSubFormsData(BuildContext context) async {
     try {
-      final response =
-          await _api.get( FormBuilderRepository.getAllSubForms);
+      // final response =
+      //     await _api.get( FormBuilderRepository.getAllSubForms);  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.allSubForms'));
       if (response.statusCode == 200) {
         return PatientSubForm.fromJsonList(response.data);
       } else {
@@ -471,13 +485,14 @@ class FormBuilderManager {
       required int chartID,
       required int episodeID}) async {
     try {
-      final response = await _api.get(
-         FormBuilderRepository.getPatientFormByPatientID(
-          patientID: patientID,
-          chartID: chartID,
-          episodeID: episodeID,
-        ),
-      );
+      // final response = await _api.get(
+      //    FormBuilderRepository.getPatientFormByPatientID(
+      //     patientID: patientID,
+      //     chartID: chartID,
+      //     episodeID: episodeID,
+      //   ),
+      // );  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.initFormData'));
       if (response.statusCode == 200) {
         final List<PatientForm> filledForms = [];
         for (int i = 0; i < response.data['filled'].length; i++) {
@@ -517,12 +532,13 @@ class FormBuilderManager {
         }) async {
     List<PatentDataEpisode> itemData = [];
     try {
-      final response = await _api.get(
-         FormBuilderRepository.getPatientEpisodeDropdown(
-          patientId: patientID,
+      // final response = await _api.get(
+      //    FormBuilderRepository.getPatientEpisodeDropdown(
+      //     patientId: patientID,
 
-        ),
-      );
+      //   ),
+      // );  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.episodeDropdown'));
       if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 304) {
         for(var item in response.data){
           itemData.add(PatentDataEpisode(
@@ -554,15 +570,16 @@ class FormBuilderManager {
     required int formID,
   }) async {
     try {
-      var response = await _api.post(
-        FormBuilderRepository.initPatientForm,
-         {
-          "patient_id": patientID,
-          "formId": formID,
-          "chart_id": chartID,
-          "episode_id": episodeID
-        },
-      );
+      // var response = await _api.post(
+      //   FormBuilderRepository.initPatientForm,
+      //    {
+      //     "patient_id": patientID,
+      //     "formId": formID,
+      //     "chart_id": chartID,
+      //     "episode_id": episodeID
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.initPatientForm'), statusCode: 201, statusMessage: 'Created');
       // print(list.runtimeType);
       if (response.statusCode == 201) {
         return PatientForm.fromJson(response.data);
@@ -582,9 +599,10 @@ class FormBuilderManager {
     required String questionCode,
   }) async {
     try {
-      var response = await _api.get(
-        FormBuilderRepository.getQuestionMarkupByCode(code: questionCode),
-      );
+      // var response = await _api.get(
+      //   FormBuilderRepository.getQuestionMarkupByCode(code: questionCode),
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.questionMarkup'));
       // print(list.runtimeType);
       if (response.statusCode == 200) {
         return QuestionMarkup.fromJson(response.data['data']);
@@ -603,9 +621,10 @@ class FormBuilderManager {
     BuildContext context,
   ) async {
     try {
-      var response = await _api.get(
-        FormBuilderRepository.getEmployeeTypeByDepartment1,
-      );
+      // var response = await _api.get(
+      //   FormBuilderRepository.getEmployeeTypeByDepartment1,
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.employeeTypes'));
       // print(list.runtimeType);
       if (response.statusCode == 200) {
         return EmployeeType.fromJsonList(response.data);
@@ -682,11 +701,12 @@ class FormBuilderManager {
         required int patientFormID,
       }) async {
     try {
-      var response = await _api.post(
-        FormBuilderRepository.patchPhysicianOrder(
-            patientFormId: patientFormID), {},
+      // var response = await _api.post(
+      //   FormBuilderRepository.patchPhysicianOrder(
+      //       patientFormId: patientFormID), {},
 
-      );
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.assignPhysicianOrder'), statusCode: 201, statusMessage: 'Created');
       if (response.statusCode == 201) {
         return ApiData(
             statusCode: response.statusCode!,
@@ -716,15 +736,16 @@ class FormBuilderManager {
     bool? isLastVisit,
   }) async {
     try {
-      var response = await _api.patch(
-           "/patient-visits/$visitId",
-          isLastVisit == true ? {
-            "onWay": onWay,
-            "episodeEndType": visitTypeData
-          }:{
-            "onWay": onWay,
-          }
-      );
+      // var response = await _api.patch(
+      //      "/patient-visits/$visitId",
+      //     isLastVisit == true ? {
+      //       "onWay": onWay,
+      //       "episodeEndType": visitTypeData
+      //     }:{
+      //       "onWay": onWay,
+      //     }
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.startVisit'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("patch start visit response: ${response.data}");
@@ -766,12 +787,13 @@ class FormBuilderManager {
       String base64,
       ) async {
     try {
-      var response = await _api.post(
-        MarkMissedRepository.uploadVisitPhoto(visitId: visitId),
-         {
-          "base64": base64,
-        },
-      );
+      // var response = await _api.post(
+      //   MarkMissedRepository.uploadVisitPhoto(visitId: visitId),
+      //    {
+      //     "base64": base64,
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.uploadVisitPhoto'));
       print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Visit photo uploaded");
@@ -811,19 +833,20 @@ class FormBuilderManager {
         required List<String> notificationMethods,
       }) async {
     try {
-      var response = await _api.patch(
-        MarkMissedRepository.markMissed(visitId: visitId),
-        {
-          "reason":              reason,
-          "isAttemptedVisit":    isAttemptedVisit,
-          "photoUrl":            photoUrl,
-          "actionsTaken":        actionsTaken,
-          "notificationDate":    notificationDate,
-          "notificationTime":    notificationTime,
-          "individualsNotified": individualsNotified,
-          "notificationMethods": notificationMethods,
-        },
-      );
+      // var response = await _api.patch(
+      //   MarkMissedRepository.markMissed(visitId: visitId),
+      //   {
+      //     "reason":              reason,
+      //     "isAttemptedVisit":    isAttemptedVisit,
+      //     "photoUrl":            photoUrl,
+      //     "actionsTaken":        actionsTaken,
+      //     "notificationDate":    notificationDate,
+      //     "notificationTime":    notificationTime,
+      //     "individualsNotified": individualsNotified,
+      //     "notificationMethods": notificationMethods,
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.markVisitMissed'));
       print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Visit marked as missed");
@@ -868,12 +891,13 @@ class FormBuilderManager {
     required String episodeEndType
   }) async {
     try {
-      var response = await _api.patch(
-          MarkMissedRepository.patientVisitEpisodEnd(visitId: visitId),
-         {
-            "episodeEndType": episodeEndType,
-          }
-      );
+      // var response = await _api.patch(
+      //     MarkMissedRepository.patientVisitEpisodEnd(visitId: visitId),
+      //    {
+      //       "episodeEndType": episodeEndType,
+      //     }
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.episodeEnd'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Episode changed");
 
@@ -904,12 +928,13 @@ class FormBuilderManager {
 
   }) async {
     try {
-      var response = await _api.patch(
-        MarkMissedRepository.recertDecisionVisit(visitId: id),
-       {
-          "decision": decision,
-        },
-      );
+      // var response = await _api.patch(
+      //   MarkMissedRepository.recertDecisionVisit(visitId: id),
+      //  {
+      //     "decision": decision,
+      //   },
+      // );  // MOCKED for local UI testing
+      var response = mockResponse(MockData.get('forms.recertDecision'));
 
       print('decision: $response');
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -942,8 +967,9 @@ class FormBuilderManager {
   }) async {
     List<PendingReviewAssistanceForm> itemsData = [];
     try {
-      final response = await _api.get(
-          MarkMissedRepository.getPatientFormReview(patientId: patientId));
+      // final response = await _api.get(
+      //     MarkMissedRepository.getPatientFormReview(patientId: patientId));  // MOCKED for local UI testing
+      final response = mockResponse(MockData.get('forms.pendingReviewForms'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         for (var item in response.data) {

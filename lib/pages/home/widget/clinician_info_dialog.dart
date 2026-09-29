@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:clinician_app/core/constant/constant_import.dart';
 import 'package:clinician_app/model/key_value_model.dart';
+import 'package:clinician_app/utils/common_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -74,7 +75,7 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                       width: 20.w,
                       height: 20.h,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: AppColors.grey),
+                      decoration: BoxDecoration(color: AppColors.hintGrey),
                       child: SvgPicture.asset(
                         AppAsset.closeSvgIcon,
                         colorFilter: Colors.white.getSvgColor,
@@ -99,7 +100,8 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                       Row(
                         children: [
                           Container(
-                            width: 56.w,
+                            width: 42.w,
+                            height: 45.h,
                             decoration: BoxDecoration(shape: BoxShape.circle),
                             clipBehavior: Clip.hardEdge,
                             child: liveMapController.visitDashboardDetails.value.patient.imageUrl.isEmpty ? Image.asset(
@@ -116,22 +118,19 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                             children: [
                               Text(
                                 liveMapController.visitDashboardDetails.value.patient.name,
-                                style: AppTextStyle.normal12style.copyWith(
+                                style: AppTextStyle.regular12style.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.defaultTxtGrey,
-                                ),
-                              ),
-                              Text(
-                                '${liveMapController.visitDashboardDetails.value.patient.gender} | ${liveMapController.visitDashboardDetails.value.patient.age}y',
-                                style: AppTextStyle.normal12style.copyWith(
-                                  fontWeight: FontWeight.w300,
+                                  height: 1.5,
+                                  letterSpacing: 0,
                                   color: AppColors.defaultTxtGrey,
                                 ),
                               ),
                               Text(
                                 liveMapController.visitDashboardDetails.value.patient.primaryDiagnosis,
-                                style: AppTextStyle.normal12style.copyWith(
+                                style: AppTextStyle.regular12style.copyWith(
                                   fontWeight: FontWeight.w300,
+                                  height: 1.5,
+                                  letterSpacing: 0,
                                   color: AppColors.defaultTxtGrey,
                                 ),
                               ),
@@ -143,17 +142,23 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                             children: [
                               Text(
                                 '2x4    | ${liveMapController.visitDashboardDetails.value.visit.distanceInMiles}',
-                                style: AppTextStyle.normal12style.copyWith(
-                                  fontWeight: FontWeight.w600,
+                                textAlign: TextAlign.right,
+                                style: AppTextStyle.regular12style.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  height: 23 / 12,
+                                  letterSpacing: 0,
                                   color: AppColors.defaultTxtGrey,
                                 ),
                               ),
                               Text(
                                 '\$${liveMapController.visitDashboardDetails.value.visit.visitCharge}',
-                                style: AppTextStyle.normal12style.copyWith(
+                                textAlign: TextAlign.right,
+                                style: AppTextStyle.regular16style.copyWith(
                                   fontSize: 20.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.primaryAppColor,
+                                  height: 1.5,
+                                  letterSpacing: 0,
+                                  color: AppColors.accentBlue,
                                 ),
                               ),
                             ],
@@ -162,8 +167,11 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                       ),
                       Text(
                         'Distance ${liveMapController.visitDashboardDetails.value.visit.distanceKm ?? "--"}',
-                        style: AppTextStyle.normal12style.copyWith(
-                          color: AppColors.textGreyColor,
+                        style: AppTextStyle.regular12style.copyWith(
+                          fontWeight: FontWeight.w400,
+                          height: 1,
+                          letterSpacing: 0,
+                          color: AppColors.defaultTxtGrey,
                         ),
                       ),
                       customHeight(6.h),
@@ -171,21 +179,26 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                         children: [
                           Text(
                             'Visit  ${liveMapController.visitDashboardDetails.value.visit.visitCount}',
-                            style: AppTextStyle.normal12style.copyWith(
-                              color: AppColors.textGreyColor,
+                            style: AppTextStyle.regular12style.copyWith(
+                              fontWeight: FontWeight.w400,
+                              height: 1,
+                              letterSpacing: 0,
+                              color: AppColors.defaultTxtGrey,
                             ),
                           ),
                           Spacer(),
                           Text(
-                            liveMapController.visitDashboardDetails.value.visit.timeToReach,
-                            style: AppTextStyle.normal12style.copyWith(
+                            'Time to reach',
+                            textAlign: TextAlign.right,
+                            style: AppTextStyle.regular12style.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textGreyColor,
+                              height: 23 / 12,
+                              letterSpacing: 0,
+                              color: AppColors.defaultTxtGrey,
                             ),
                           ),
                         ],
                       ),
-                      customHeight(6.h),
                       Row(
                         children: [
                           SvgPicture.asset(AppAsset.locationFillSvgIcon),
@@ -193,21 +206,29 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                           Expanded(
                             child: Text(
                               liveMapController.visitDashboardDetails.value.patient.address,
-                              style: AppTextStyle.normal12style.copyWith(
+                              style: AppTextStyle.regular12style.copyWith(
+                                fontWeight: FontWeight.w400,
+                                height: 1,
+                                letterSpacing: 0,
                                 color: AppColors.defaultTxtGrey,
                               ),
                             ),
                           ),
-                          Text(" ",
-                            //'30- 40 mins',
-                            style: AppTextStyle.normal12style.copyWith(
+                          customWidth(8.w),
+                          Text(
+                            liveMapController
+                                .visitDashboardDetails.value.visit.timeToReach,
+                            textAlign: TextAlign.right,
+                            style: AppTextStyle.regular12style.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textGreyColor,
+                              height: 23 / 12,
+                              letterSpacing: 0,
+                              color: AppColors.defaultTxtGrey,
                             ),
                           ),
                         ],
                       ),
-                      customHeight(8.h),
+                      customHeight(2.h),
                       Text(
                         liveMapController.visitDashboardDetails.value.patient.about,
                         style: AppTextStyle.normal12style.copyWith(
@@ -217,9 +238,11 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                       customHeight(8.h),
                       Text(
                         'Plan Of Care',
-                        style: AppTextStyle.normal12style.copyWith(
+                        style: AppTextStyle.regular12style.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textGreyColor,
+                          height: 1,
+                          letterSpacing: 0,
+                          color: AppColors.defaultTxtGrey,
                         ),
                       ),
                       customHeight(10.h),
@@ -228,15 +251,15 @@ class _ClinicianInfoDialogState extends State<ClinicianInfoDialog> {
                           ...List.generate(liveMapController.visitDashboardDetails.value.planOfCare.length, (index) {
                             var list = liveMapController.visitDashboardDetails.value.planOfCare[index];
                             return Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 2.h,
-                                horizontal: 3.w,
-                              ),
-                              width: 24.w,
+                              width: 20.w,
+                              height: 20.h,
                               alignment: Alignment.center,
                               margin: EdgeInsets.only(right: 2.w),
                               decoration: BoxDecoration(
-                                color: hexToColor(list.color),
+                                color: CommonMethods.getPlanOfCareColor(
+                                  list.abbreviation,
+                                  hexToColor(list.color),
+                                ),
                                 borderRadius: BorderRadius.circular(2.r),
                               ),
                               child: Text(

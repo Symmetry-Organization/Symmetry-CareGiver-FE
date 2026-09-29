@@ -109,7 +109,10 @@ class _TimeOffPageState extends State<TimeOffPage> {
                                   child: Text(
                                     "Available Time Off",
                                     style: AppTextStyle.bold14style.copyWith(
-                                      color: AppColors.primaryAppColor,
+                                      color: AppColors.timeOffAvailableBlue,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.5,
                                     ),
                                   ),
                                 ),
@@ -117,9 +120,10 @@ class _TimeOffPageState extends State<TimeOffPage> {
                                 Text(
                                   "36.0 hours",
                                   style: AppTextStyle.bold14style.copyWith(
-                                    color: AppColors.primaryAppColor,
+                                    color: AppColors.timeOffAvailableBlue,
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.w700,
+                                    height: 1.5,
                                   ),
                                 ),
                               ],

@@ -24,6 +24,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> with RouteAware {
+  static const double _mapOverlayHeight = 140;
+  static const double _mapBottomOverlayHeight = 90;
+
   RxInt mapInx = 0.obs;
   final List<UserProgress> users = [
     UserProgress('Ralph Edwards', '\$55.00', true, true),
@@ -38,7 +41,21 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
   void initState() {
     // ✅ one-time initial load (no more continuous polling)
     liveMapController.loadInitial();
+    liveMapController.onPatientMarkerTap = _openVisitDialog;
     super.initState();
+  }
+
+  /// Opens the visit dialog for [visitId] — shared by the timeline cards and
+  /// the map pins.
+  Future<void> _openVisitDialog(int visitId) async {
+    await liveMapController.fetchVisitMapDetails(visitId: visitId);
+    Get.dialog(
+      ClinicianInfoDialog(
+        data: liveMapController.visitDashboardDetails.value,
+        viditId: visitId,
+      ),
+      barrierColor: Colors.white38,
+    );
   }
 
   @override
@@ -49,6 +66,7 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
 
   @override
   void dispose() {
+    liveMapController.onPatientMarkerTap = null;
     routeObserver.unsubscribe(this);
     super.dispose();
   }
@@ -129,14 +147,7 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     hoverColor: Colors.transparent,
-                                    onTap: ()async{
-                                     await liveMapController.fetchVisitMapDetails(visitId: user.visitId);
-                                      Get.dialog(
-                                        ClinicianInfoDialog(data: liveMapController.visitDashboardDetails.value,
-                                        viditId: user.visitId),
-                                        barrierColor: Colors.white38,
-                                      );
-                                    },
+                                    onTap: () => _openVisitDialog(user.visitId),
                                     child: CustomTimelineCard(
                                       name: user.patientName,
                                       time: '${user.visitDateTimeTo} ${user.visiteDateTimeFrom}',
@@ -270,17 +281,17 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
                               myLocationButtonEnabled: false,
                               zoomControlsEnabled: false,
                               mapToolbarEnabled: false,
+                              // keeps fitted markers clear of the card + toggle overlay
+                              padding: EdgeInsets.only(
+                                top: _mapOverlayHeight.h,
+                                bottom: _mapBottomOverlayHeight.h,
+                              ),
 
                               // ✅ ADD THESE TWO
                               markers: liveMapController.markers.value,
                               polylines: liveMapController.polylines.value,
 
-                              onMapCreated: (GoogleMapController controller) {
-                                liveMapController.mapController = controller;
-
-                                // Optional: if data already selected, draw route immediately
-                                // liveMapController.drawRoute();
-                              },
+                              onMapCreated: liveMapController.onMapReady,
                             )),
                           ),
                           Positioned(
@@ -355,16 +366,25 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
                 Positioned.fill(
                   child: Column(
                     children: [
-                      customHeight(10.h),
                       InkWell(
                         onTap: () {
 
                         },
-                        child: Container(
+                        child: Obx(() => Container(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           width: double.maxFinite,
+                          margin: mapInx.value == 1
+                              ? EdgeInsets.symmetric(horizontal: 16.w)
+                              : EdgeInsets.zero,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            // List tab: floating card (Figma); Map tab: the
+                            // original full-width band — unchanged.
+                            color: mapInx.value == 1
+                                ? AppColors.textFieldBackGColor
+                                : Colors.white,
+                            borderRadius: mapInx.value == 1
+                                ? BorderRadius.circular(6.r)
+                                : null,
                             boxShadow: [
                               BoxShadow(
                                 offset: Offset(2.w, 2.h),
@@ -517,7 +537,7 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
 
                             ],
                           ),
-                        ),
+                        )),
                       ),
                       customHeight(10.h),
                       Align(
@@ -580,7 +600,10 @@ class _MapScreenState extends State<MapScreen> with RouteAware {
                   bottom: 68.h,
                   child: InkWell(
                     onTap: () {
-                      Get.dialog(SeeRouteDialog());
+                      Get.dialog(
+                        SeeRouteDialog(),
+                        barrierColor: const Color(0x4DDDDDDD),
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -651,6 +674,29 @@ final List<User> userList = [
   User(name: 'Wade Warren', imageUrl: 'https://i.pravatar.cc/100?img=5'),
   User(name: 'Bessie Cooper', imageUrl: 'https://i.pravatar.cc/100?img=6'),
 ];
+
+/// Dotted connector between timeline indicators. Sized by its parent, so it
+/// never overflows the row like a fixed-length dash did.
+class _TimelineConnector extends StatelessWidget {
+  const _TimelineConnector({required this.visible});
+
+  final bool visible;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => Dash(
+        dashColor: visible ? Colors.black : Colors.transparent,
+        direction: Axis.vertical,
+        dashThickness: 2.w,
+        dashLength: 5,
+        dashGap: 2,
+        dashBorderRadius: 2.r,
+        length: constraints.maxHeight,
+      ),
+    );
+  }
+}
 
 class CustomTimelineCard extends StatelessWidget {
   final String name;
@@ -770,20 +816,7 @@ class CustomTimelineCard extends StatelessWidget {
               // Top dotted line
               // if (index > 0)
               Expanded(
-                child: Dash(
-                  dashColor: index > 0 ? Colors.black : Colors.transparent,
-                  direction: Axis.vertical,
-                  dashThickness: 2.w,
-                  dashLength: 5,
-                  dashGap: 2,
-                  dashBorderRadius: 2.r,
-                  length: 25.h,
-                ),
-                // child: Container(
-                //   width: 2,
-                //   color: index > 0 ? Colors.black : Colors.transparent,
-                //   height: 20,
-                // ),
+                child: _TimelineConnector(visible: index > 0),
               ),
               // Circle or pin icon
               Container(
@@ -821,23 +854,7 @@ class CustomTimelineCard extends StatelessWidget {
               ),
               // Bottom line
               Expanded(
-                child: Column(
-                  children: [
-                    Dash(
-                      dashColor:
-                          index < length - 1
-                              ? Colors.black
-                              : Colors.transparent,
-                      direction: Axis.vertical,
-                      dashThickness: 2.w,
-                      dashLength: 5,
-                      dashGap: 2,
-                      dashBorderRadius: 2.r,
-                      length: 25.h,
-                    ),
-                    customHeight(1.h),
-                  ],
-                ),
+                child: _TimelineConnector(visible: index < length - 1),
               ),
             ],
           ),
